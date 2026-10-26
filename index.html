@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EFBL COINS STORE</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    body {
+      background-color: #0b0f19;
+      color: #fff;
+      padding: 15px;
+    }
+
+    /* إشعار كود التحقق العلوي */
+    .top-notification {
+      display: none;
+      background: linear-gradient(135deg, #1f6feb, #238636);
+      color: white;
+      padding: 16px;
+      border-radius: 12px;
+      text-align: center;
+      margin-bottom: 15px;
+      font-weight: bold;
+      box-shadow: 0 6px 20px rgba(35, 134, 54, 0.4);
+      animation: fadeIn 0.5s ease;
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+
+    /* إشعار الترحيب الفخم الخاص برجل الأعمال */
+    .vip-welcome-toast {
+      display: none;
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 90%;
+      max-width: 400px;
+      background: linear-gradient(135deg, #111827, #1f2937, #374151);
+      color: #ffffff;
+      padding: 18px 20px;
+      border-radius: 16px;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 20px rgba(212, 175, 55, 0.3);
+      z-index: 9999;
+      border: 1px solid rgba(212, 175, 55, 0.4);
+      animation: slideDown 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .vip-welcome-toast h3 {
+      font-size: 16px;
+      color: #f3f4f6;
+      margin-bottom: 6px;
+      font-weight: bold;
+      letter-spacing: 0.5px;
+    }
+    .vip-welcome-toast span {
+      display: inline-block;
+      font-size: 14px;
+      color: #d4af37; /* لون ذهبي فخم لاسم الكلان */
+      font-weight: bold;
+      background: rgba(212, 175, 55, 0.1);
+      padding: 4px 12px;
+      border-radius: 8px;
+      border: 1px solid rgba(212, 175, 55, 0.3);
+      margin-top: 4px;
+    }
+
+    @keyframes slideDown {
+      from { opacity: 0; transform: translate(-50%, -30px); }
+      to { opacity: 1; transform: translate(-50%, 0); }
+    }
+
+    /* رسالة الترحيب داخل المتجر */
+    .welcome-banner {
+      background: linear-gradient(135deg, #2ea043, #1f6feb);
+      padding: 15px;
+      border-radius: 12px;
+      text-align: center;
+      margin-bottom: 20px;
+      box-shadow: 0 6px 20px rgba(46, 160, 67, 0.4);
+      animation: fadeIn 0.6s ease;
+    }
+    .welcome-banner h2 {
+      font-size: 20px;
+      color: #fff;
+      margin-bottom: 4px;
+    }
+    .welcome-banner p {
+      font-size: 14px;
+      color: #e6edf3;
+    }
+
+    /* شاشات تسجيل الدخول */
+    .auth-screen {
+      background: #161b22;
+      border: 1px solid #30363d;
+      padding: 24px;
+      border-radius: 16px;
+      margin-top: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+    }
+    .auth-screen h2 {
+      font-size: 20px;
+      color: #58a6ff;
+      margin-bottom: 15px;
+      text-align: center;
+    }
+    
+    .store-screen {
+      display: none;
+      animation: fadeIn 0.5s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* أزرار اختيار البداية (حساب قديم / إنشاء حساب) */
+    .mode-select-box {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+    .mode-btn {
+      flex: 1;
+      padding: 10px;
+      background: #21262d;
+      border: 1px solid #30363d;
+      color: #8b949e;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 13px;
+      transition: all 0.2s;
+    }
+    .mode-btn.active {
+      background: #238636;
+      color: #fff;
+      border-color: #2ea043;
+    }
+
+    /* عناوين الأقسام */
+    .section-header {
+      font-size: 18px;
+      color: #f0883e;
+      margin: 28px 0 12px 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: bold;
+      border-bottom: 2px solid #30363d;
+      padding-bottom: 6px;
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 15px;
+    }
+    .card {
+      background: linear-gradient(145deg, #161b22, #11161d);
+      border: 2px solid #30363d;
+      border-radius: 16px;
+      padding: 16px 12px;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      transition: all 0.25s ease;
+      position: relative;
+    }
+    .card.selected {
+      border-color: #2ea043;
+      background: #1c2533;
+    }
+    
+    .card .coin-img {
+      width: 55px;
+      height: 55px;
+      object-fit: contain;
+      margin-bottom: 10px;
+      filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4));
+    }
+
+    .card h3 {
+      color: #fff;
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 6px;
+    }
+    .card .price {
+      font-size: 16px;
+      color: #58a6ff;
+      margin-bottom: 12px;
+      font-weight: bold;
+    }
+    
+    .cart-btn {
+      background: linear-gradient(135deg, #238636, #1f6feb);
+      color: white;
+      border: none;
+      padding: 10px 8px;
+      border-radius: 10px;
+      font-weight: bold;
+      cursor: pointer;
+      width: 100%;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      box-shadow: 0 4px 12px rgba(35, 134, 54, 0.3);
+      transition: all 0.2s ease;
+    }
+    .cart-btn:active {
+      transform: scale(0.95);
+    }
+
+    .payment-box {
+      background: #161b22;
+      border: 1px solid #30363d;
+      padding: 16px;
+      border-radius: 14px;
+      margin-bottom: 15px;
+    }
+    .payment-options {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      font-size: 14px;
+      color: #8b949e;
+    }
+    .payment-options span {
+      color: #2ea043;
+      font-weight: bold;
+    }
+
+    .form-section {
+      background: #161b22;
+      border: 1px solid #30363d;
+      padding: 20px;
+      border-radius: 16px;
+      margin-top: 25px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+    }
+    .form-section h2 {
+      font-size: 18px;
+      margin-bottom: 12px;
+      color: #2ea043;
+      text-align: center;
+    }
+
+    input[type="email"], input[type="password"], input[type="text"] {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 14px;
+      border-radius: 10px;
+      border: 1px solid #30363d;
+      background: #0d1117;
+      color: white;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    input:focus {
+      border-color: #238636;
+    }
+
+    .email-status {
+      font-size: 13px;
+      margin-top: -10px;
+      margin-bottom: 12px;
+      font-weight: bold;
+      display: none;
+    }
+
+    .btn {
+      background: linear-gradient(135deg, #238636, #2ea043);
+      color: white;
+      border: none;
+      padding: 12px 14px;
+      border-radius: 10px;
+      font-weight: bold;
+      cursor: pointer;
+      width: 100%;
+      font-size: 15px;
+      box-shadow: 0 4px 12px rgba(35, 134, 54, 0.3);
+      transition: all 0.2s ease;
+    }
+    .btn:active {
+      transform: scale(0.97);
+      opacity: 0.9;
+    }
+
+    .resend-btn {
+      background: linear-gradient(135deg, #1f6feb, #388bfd);
+      margin-top: 8px;
+      box-shadow: 0 4px 12px rgba(31, 111, 235, 0.3);
+    }
+
+    .contact-btns {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 10px;
+    }
+    .whatsapp-btn { 
+      background: linear-gradient(135deg, #25d366, #1ebe5d); 
+      box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4);
+    }
+    .telegram-btn { 
+      background: linear-gradient(135deg, #0088cc, #0077b5); 
+      box-shadow: 0 4px 15px rgba(0, 136, 204, 0.4);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- إشعار كود التحقق العلوي -->
+  <div id="topNotification" class="top-notification">
+    📩 كود التحقق (6 أرقام): <span id="generatedCodeDisplay" style="background:#0b0f19; padding:4px 10px; border-radius:6px; letter-spacing:3px; color:#58a6ff;">------</span>
+    <div style="font-size:11px; color:#e6edf3; margin-top:5px;">سيختفي هذا الإشعار خلال 10 ثوانٍ!</div>
+  </div>
+
+  <!-- إشعار الترحيب الفخم (رجل أعمال) -->
+  <div id="vipWelcomeToast" class="vip-welcome-toast">
+    <h3>أهلاً بك في أفضل كلان داخل ليبيا</h3>
+    <span>[EFBL_ STORE]</span>
+  </div>
+
+  <!-- شاشة تسجيل الدخول / إنشاء حساب -->
+  <div id="authContainer" class="auth-screen">
+    <h2>بوابة دخول المتجر</h2>
+    
+    <!-- أزرار الاختيار بين حساب قديم أو إنشاء حساب جديد -->
+    <div class="mode-select-box">
+      <button id="btnModeOld" class="mode-btn active" onclick="switchMode('old')">لدي حساب قديم</button>
+      <button id="btnModeNew" class="mode-btn" onclick="switchMode('new')">إنشاء حساب جديد</button>
+    </div>
+
+    <!-- خطوة إدخال الإيميل والباسورد -->
+    <div id="step1">
+      <p id="authSubtitle" style="font-size:12px; color:#8b949e; margin-bottom:14px; text-align:center;">أدخل بريدك وكلمة السر لتسجيل الدخول بحسابك القديم</p>
+      
+      <input type="email" id="userEmail" placeholder="البريد الإلكتروني (مثال: user@gmail.com)">
+      <div id="emailStatus" class="email-status"></div>
+
+      <input type="password" id="userPass" placeholder="كلمة السر">
+      <button id="authMainBtn" class="btn" onclick="handleAuthAction()">تسجيل الدخول</button>
+    </div>
+
+    <!-- خطوة إدخال كود التحقق (خاصة بإنشاء حساب جديد فقط) -->
+    <div id="step2" style="display: none; margin-top: 15px;">
+      <h2>تأكيد كود الحساب الجديد</h2>
+      <p style="font-size:12px; color:#8b949e; margin-bottom:14px; text-align:center;">اكتب كود الـ 6 أرقام الذي ظهر أعلى الشاشة:</p>
+      <input type="text" id="enteredCode" placeholder="أدخل الكود المكون من 6 أرقام" maxlength="6">
+      <button class="btn" onclick="verifyCode()">تأكيد وإنشاء الحساب</button>
+      <button class="btn resend-btn" onclick="resendCode()">🔄 إعادة إرسال الكود</button>
+    </div>
+  </div>
+
+  <!-- شاشة المتجر الرئيسية -->
+  <div id="storeScreen" class="store-screen">
+    
+    <div class="welcome-banner">
+      <h2>🎉 أهلاً بك في متجر EFBL COINS!</h2>
+      <p>تصفح عروض الشحن والمكافآت واختر ما يناسبك بكل سهولة.</p>
+    </div>
+
+    <!-- الجزء الأول: طرق الدفع -->
+    <div class="section-header">💳 طرق الدفع المتاحة</div>
+    <div class="payment-box">
+      <div class="payment-options">
+        <p>1️⃣ كروت تعبئة لبيانا.</p>
+        <p>2️⃣ <span>تحويل مصرفي</span> (⭐ الأفضل والأسعار أقل!).</p>
+      </div>
+    </div>
+
+    <!-- الجزء الثاني: العروض والمكافآت -->
+    <div class="section-header">🎁 عروض اللاعبين والمكافآت</div>
+    <div class="card-grid">
+      <div class="card" id="card-suarez">
+        <img src="https://img.icons8.com/emoji/96/fire.png" class="coin-img" alt="سواريز">
+        <h3>سواريز</h3>
+        <div class="price">13 د.ل</div>
+        <button class="cart-btn" onclick="togglePackage('عرض اللاعب سواريز (13 د.ل)', 'card-suarez')">إضافة إلى السلة 🛒</button>
+      </div>
+      <div class="card" id="card-casillas">
+        <img src="https://img.icons8.com/emoji/96/gloves.png" class="coin-img" alt="كاسياس">
+        <h3>كاسياس</h3>
+        <div class="price">33 د.ل</div>
+        <button class="cart-btn" onclick="togglePackage('عرض اللاعب كاسياس (33 د.ل)', 'card-casillas')">إضافة إلى السلة 🛒</button>
+      </div>
+    </div>
+
+    <!-- الجزء الثالث: شحن الكوينز -->
+    <div class="section-header">🪙 شحن كوينز إي فوتبول</div>
+    <div class="card-grid">
+      <div class="card" id="card-100">
+        <img src="https://img.icons8.com/gold-badges/96/gold-bars.png" class="coin-img" alt="كوينز">
+        <h3>100 كوين</h3>
+        <div class="price">13 د.ل</div>
+        <button class="cart-btn" onclick="togglePackage('100 كوين (13 د.ل)', 'card-100')">إضافة إلى السلة 🛒</button>
+      </div>
+      <div class="card" id="card-300">
+        <img src="https://img.icons8.com/gold-badges/96/gold-bars.png" class="coin-img" alt="كوينز">
+        <h3>300 كوين</h3>
+        <div class="price">33 د.ل</div>
+        <button class="cart-btn" onclick="togglePackage('300 كوين (33 د.ل)', 'card-300')">إضافة إلى السلة 🛒</button>
+      </div>
+      <div class="card" id="card-500">
+        <img src="https://img.icons8.com/gold-badges/96/gold-bars.png" class="coin-img" alt="كوينز">
+        <h3>500 كوين</h3>
+        <div class="price">55 د.ل</div>
+        <button class="cart-btn" onclick="togglePackage('500 كوين (55 د.ل)', 'card-500')">إضافة إلى السلة 🛒</button>
+      </div>
+      <div class="card" id="card-1000">
+        <img src="https://img.icons8.com/gold-badges/96/gold-bars.png" class="coin-img" alt="كوينز">
+        <h3>1,000 كوين</h3>
+        <div class="price">98 د.ل</div>
+        <button class="cart-btn" onclick="togglePackage('1,000 كوين (98 د.ل)', 'card-1000')">إضافة إلى السلة 🛒</button>
+      </div>
+      <div class="card" id="card-2000">
+        <img src="https://img.icons8.com/gold-badges/96/gold-bars.png" class="coin-img" alt="كوينز">
+        <h3>2,000 كوين</h3>
+        <div class="price">185 د.ل</div>
+        <button class="cart-btn" onclick="togglePackage('2,000 كوين (185 د.ل)', 'card-2000')">إضافة إلى السلة 🛒</button>
+      </div>
+      <div class="card" id="card-3000">
+        <img src="https://img.icons8.com/gold-badges/96/gold-bars.png" class="coin-img" alt="كوينز">
+        <h3>3,000 كوين</h3>
+        <div class="price">260 د.ل</div>
+        <button class="cart-btn" onclick="togglePackage('3,000 كوين (260 د.ل)', 'card-3000')">إضافة إلى السلة 🛒</button>
+      </div>
+      <div class="card" id="card-5000">
+        <img src="https://img.icons8.com/gold-badges/96/gold-bars.png" class="coin-img" alt="كوينز">
+        <h3>5,000 كوين</h3>
+        <div class="price">395 د.ل</div>
+        <button class="cart-btn" onclick="togglePackage('5,000 كوين (395 د.ل)', 'card-5000')">إضافة إلى السلة 🛒</button>
+      </div>
+      <div class="card" id="card-10000">
+        <img src="https://img.icons8.com/gold-badges/96/gold-bars.png" class="coin-img" alt="كوينز">
+        <h3>10,000 كوين</h3>
+        <div class="price">725 د.ل</div>
+        <button class="cart-btn" onclick="togglePackage('10,000 كوين (725 د.ل)', 'card-10000')">إضافة إلى السلة 🛒</button>
+      </div>
+      <div class="card" id="card-15000" style="grid-column: span 2;">
+        <img src="https://img.icons8.com/gold-badges/96/gold-bars.png" class="coin-img" alt="كوينز">
+        <h3>15,000 كوين</h3>
+        <div class="price">1100 د.ل</div>
+        <button class="cart-btn" onclick="togglePackage('15,000 كوين (1100 د.ل)', 'card-15000')">إضافة إلى السلة 🛒</button>
+      </div>
+    </div>
+
+    <!-- قسم إرسال الطلب في الأسفل -->
+    <div class="form-section">
+      <h2>📩 إرسال الطلب النهائي</h2>
+      <p style="font-size:13px; color:#8b949e; margin-bottom:12px; text-align:center;">اخترت باقاتك؟ اختر الطريقة للإرسال الفوري:</p>
+      <div class="contact-btns">
+        <button class="btn whatsapp-btn" onclick="sendOrder('whatsapp')">💬 إرسال الطلب عبر الواتساب</button>
+        <button class="btn telegram-btn" onclick="sendOrder('telegram')">✈️ إرسال الطلب عبر التليجرام</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    var currentMode = 'old'; 
+    var generatedCode = "";
+    var selectedPackages = [];
+
+    // دالة إظهار إشعار الترحيب الفخم لرجل الأعمال
+    function showVipWelcome() {
+      var toast = document.getElementById('vipWelcomeToast');
+      toast.style.display = 'block';
+      setTimeout(function() {
+        toast.style.display = 'none';
+      }, 4000); // يختفي بعد 4 ثواني بطريقة راقية
+    }
+
+    window.onload = function() {
+      var savedUser = localStorage.getItem('efbl_logged_user');
+      if (savedUser) {
+        document.getElementById('authContainer').style.display = 'none';
+        document.getElementById('storeScreen').style.display = 'block';
+        showVipWelcome(); // إظهار الترحيب الفخم عند الدخول التلقائي
+      }
+    };
+
+    function isValidEmail(email) {
+      var atpos = email.indexOf("@");
+      var dotpos = email.lastIndexOf(".");
+      if (atpos < 1 || dotpos < atpos + 2 || dotpos + 2 >= email.length) {
+        return false;
+      }
+      return true;
+    }
+
+    function switchMode(mode) {
+      currentMode = mode;
+      var btnOld = document.getElementById('btnModeOld');
+      var btnNew = document.getElementById('btnModeNew');
+      var subtitle = document.getElementById('authSubtitle');
+      var mainBtn = document.getElementById('authMainBtn');
+
+      if (mode === 'old') {
+        btnOld.className = 'mode-btn active';
+        btnNew.className = 'mode-btn';
+        subtitle.innerText = 'أدخل بريدك وكلمة السر لتسجيل الدخول بحسابك القديم';
+        mainBtn.innerText = 'تسجيل الدخول';
+        document.getElementById('step2').style.display = 'none';
+      } else {
+        btnNew.className = 'mode-btn active';
+        btnOld.className = 'mode-btn';
+        subtitle.innerText = 'أدخل بريدك وكلمة السر الجديدة لإنشاء حساب جديد';
+        mainBtn.innerText = 'إرسال كود التحقق (6 أرقام)';
+        document.getElementById('step2').style.display = 'none';
+      }
+      document.getElementById('emailStatus').style.display = 'none';
+    }
+
+    function handleAuthAction() {
+      var email = document.getElementById('userEmail').value.trim();
+      var pass = document.getElementById('userPass').value;
+      var statusDiv = document.getElementById('emailStatus');
+
+      statusDiv.style.display = 'block';
+
+      if (!isValidEmail(email)) {
+        statusDiv.style.color = '#ff5555';
+        statusDiv.innerHTML = '❌ يرجى إدخال بريد إلكتروني صحيح (يحتوي على @).';
+        return;
+      }
+
+      if (!pass) {
+        statusDiv.style.color = '#ff5555';
+        statusDiv.innerHTML = '❌ يرجى كتابة كلمة السر!';
+        return;
+      }
+
+      if (currentMode === 'old') {
+        var savedPass = localStorage.getItem('pass_' + email);
+        if (savedPass && savedPass === pass) {
+          statusDiv.style.color = '#2ea043';
+          statusDiv.innerHTML = '✅ تم تسجيل الدخول بنجاح!';
+          
+          localStorage.setItem('efbl_logged_user', email);
+
+          setTimeout(function() {
+            document.getElementById('authContainer').style.display = 'none';
+            document.getElementById('storeScreen').style.display = 'block';
+            showVipWelcome(); // إظهار الترحيب الفخم
+          }, 1000);
+        } else {
+          statusDiv.style.color = '#ff5555';
+          statusDiv.innerHTML = '❌ ليس لديك حساب بهذا البريد أو كلمة السر غير صحيحة!';
+        }
+      } else {
+        var existingPass = localStorage.getItem('pass_' + email);
+        if (existingPass) {
+          statusDiv.style.color = '#ff5555';
+          statusDiv.innerHTML = '⚠️ هذا البريد مسجل مسبقاً، قم بالدخول من خيار "لدي حساب قديم"!';
+          return;
+        }
+
+        statusDiv.style.color = '#2ea043';
+        statusDiv.innerHTML = '✅ تم إرسال كود التحقق بنجاح!';
+        
+        window.tempEmail = email;
+        window.tempPass = pass;
+
+        generateNewCode();
+
+        setTimeout(function() {
+          document.getElementById('step1').style.display = 'none';
+          document.getElementById('step2').style.display = 'block';
+        }, 1000);
+      }
+    }
+
+    function generateNewCode() {
+      generatedCode = Math.floor(100000 + Math.random() * 900000).toString();
+      
+      var notification = document.getElementById('topNotification');
+      document.getElementById('generatedCodeDisplay').innerText = generatedCode;
+      notification.style.display = 'block';
+
+      setTimeout(function() {
+        notification.style.display = 'none';
+      }, 10000);
+    }
+
+    function resendCode() {
+      generateNewCode();
+      alert('تم إعادة إرسال كود تحقق جديد وظهر أعلى الشاشة لمدة 10 ثوانٍ!');
+    }
+
+    function verifyCode() {
+      var inputCode = document.getElementById('enteredCode').value;
+
+      if(inputCode === generatedCode) {
+        document.getElementById('topNotification').style.display = 'none';
+        
+        localStorage.setItem('pass_' + window.tempEmail, window.tempPass);
+        localStorage.setItem('efbl_logged_user', window.tempEmail);
+
+        document.getElementById('authContainer').style.dis
