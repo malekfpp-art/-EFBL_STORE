@@ -28,7 +28,6 @@
       margin-bottom: 15px;
       font-weight: bold;
       box-shadow: 0 6px 20px rgba(35, 134, 54, 0.4);
-      animation: fadeIn 0.5s ease;
       border: 1px solid rgba(255,255,255,0.2);
     }
 
@@ -49,30 +48,23 @@
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 20px rgba(212, 175, 55, 0.3);
       z-index: 9999;
       border: 1px solid rgba(212, 175, 55, 0.4);
-      animation: slideDown 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
     .vip-welcome-toast h3 {
       font-size: 16px;
       color: #f3f4f6;
       margin-bottom: 6px;
       font-weight: bold;
-      letter-spacing: 0.5px;
     }
     .vip-welcome-toast span {
       display: inline-block;
       font-size: 14px;
-      color: #d4af37; /* لون ذهبي فخم لاسم الكلان */
+      color: #d4af37;
       font-weight: bold;
       background: rgba(212, 175, 55, 0.1);
       padding: 4px 12px;
       border-radius: 8px;
       border: 1px solid rgba(212, 175, 55, 0.3);
       margin-top: 4px;
-    }
-
-    @keyframes slideDown {
-      from { opacity: 0; transform: translate(-50%, -30px); }
-      to { opacity: 1; transform: translate(-50%, 0); }
     }
 
     /* رسالة الترحيب داخل المتجر */
@@ -83,7 +75,6 @@
       text-align: center;
       margin-bottom: 20px;
       box-shadow: 0 6px 20px rgba(46, 160, 67, 0.4);
-      animation: fadeIn 0.6s ease;
     }
     .welcome-banner h2 {
       font-size: 20px;
@@ -113,15 +104,9 @@
     
     .store-screen {
       display: none;
-      animation: fadeIn 0.5s ease;
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* أزرار اختيار البداية (حساب قديم / إنشاء حساب) */
+    /* أزرار اختيار البداية */
     .mode-select-box {
       display: flex;
       gap: 10px;
@@ -129,7 +114,7 @@
     }
     .mode-btn {
       flex: 1;
-      padding: 10px;
+      padding: 12px;
       background: #21262d;
       border: 1px solid #30363d;
       color: #8b949e;
@@ -137,7 +122,6 @@
       cursor: pointer;
       font-weight: bold;
       font-size: 13px;
-      transition: all 0.2s;
     }
     .mode-btn.active {
       background: #238636;
@@ -145,7 +129,6 @@
       border-color: #2ea043;
     }
 
-    /* عناوين الأقسام */
     .section-header {
       font-size: 18px;
       color: #f0883e;
@@ -171,8 +154,6 @@
       padding: 16px 12px;
       text-align: center;
       box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-      transition: all 0.25s ease;
-      position: relative;
     }
     .card.selected {
       border-color: #2ea043;
@@ -184,7 +165,6 @@
       height: 55px;
       object-fit: contain;
       margin-bottom: 10px;
-      filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4));
     }
 
     .card h3 {
@@ -210,15 +190,6 @@
       cursor: pointer;
       width: 100%;
       font-size: 13px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 5px;
-      box-shadow: 0 4px 12px rgba(35, 134, 54, 0.3);
-      transition: all 0.2s ease;
-    }
-    .cart-btn:active {
-      transform: scale(0.95);
     }
 
     .payment-box {
@@ -246,7 +217,6 @@
       padding: 20px;
       border-radius: 16px;
       margin-top: 25px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.5);
     }
     .form-section h2 {
       font-size: 18px;
@@ -265,10 +235,6 @@
       color: white;
       font-size: 14px;
       outline: none;
-      transition: border-color 0.2s;
-    }
-    input:focus {
-      border-color: #238636;
     }
 
     .email-status {
@@ -289,18 +255,11 @@
       cursor: pointer;
       width: 100%;
       font-size: 15px;
-      box-shadow: 0 4px 12px rgba(35, 134, 54, 0.3);
-      transition: all 0.2s ease;
-    }
-    .btn:active {
-      transform: scale(0.97);
-      opacity: 0.9;
     }
 
     .resend-btn {
       background: linear-gradient(135deg, #1f6feb, #388bfd);
       margin-top: 8px;
-      box-shadow: 0 4px 12px rgba(31, 111, 235, 0.3);
     }
 
     .contact-btns {
@@ -309,14 +268,8 @@
       gap: 12px;
       margin-top: 10px;
     }
-    .whatsapp-btn { 
-      background: linear-gradient(135deg, #25d366, #1ebe5d); 
-      box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4);
-    }
-    .telegram-btn { 
-      background: linear-gradient(135deg, #0088cc, #0077b5); 
-      box-shadow: 0 4px 15px rgba(0, 136, 204, 0.4);
-    }
+    .whatsapp-btn { background: linear-gradient(135deg, #25d366, #1ebe5d); }
+    .telegram-btn { background: linear-gradient(135deg, #0088cc, #0077b5); }
   </style>
 </head>
 <body>
@@ -324,7 +277,7 @@
   <!-- إشعار كود التحقق العلوي -->
   <div id="topNotification" class="top-notification">
     📩 كود التحقق (6 أرقام): <span id="generatedCodeDisplay" style="background:#0b0f19; padding:4px 10px; border-radius:6px; letter-spacing:3px; color:#58a6ff;">------</span>
-    <div style="font-size:11px; color:#e6edf3; margin-top:5px;">سيختفي هذا الإشعار خلال 10 ثوانٍ!</div>
+    <div style="font-size:11px; color:#e6edf3; margin-top:5px;">سيختفي هذا الإشعار خلال 15 ثانية!</div>
   </div>
 
   <!-- إشعار الترحيب الفخم (رجل أعمال) -->
@@ -337,13 +290,11 @@
   <div id="authContainer" class="auth-screen">
     <h2>بوابة دخول المتجر</h2>
     
-    <!-- أزرار الاختيار بين حساب قديم أو إنشاء حساب جديد -->
     <div class="mode-select-box">
-      <button id="btnModeOld" class="mode-btn active" onclick="switchMode('old')">لدي حساب قديم</button>
-      <button id="btnModeNew" class="mode-btn" onclick="switchMode('new')">إنشاء حساب جديد</button>
+      <button id="btnModeOld" type="button" class="mode-btn active" onclick="switchMode('old')">لدي حساب قديم</button>
+      <button id="btnModeNew" type="button" class="mode-btn" onclick="switchMode('new')">إنشاء حساب جديد</button>
     </div>
 
-    <!-- خطوة إدخال الإيميل والباسورد -->
     <div id="step1">
       <p id="authSubtitle" style="font-size:12px; color:#8b949e; margin-bottom:14px; text-align:center;">أدخل بريدك وكلمة السر لتسجيل الدخول بحسابك القديم</p>
       
@@ -351,16 +302,15 @@
       <div id="emailStatus" class="email-status"></div>
 
       <input type="password" id="userPass" placeholder="كلمة السر">
-      <button id="authMainBtn" class="btn" onclick="handleAuthAction()">تسجيل الدخول</button>
+      <button id="authMainBtn" type="button" class="btn" onclick="handleAuthAction()">تسجيل الدخول</button>
     </div>
 
-    <!-- خطوة إدخال كود التحقق (خاصة بإنشاء حساب جديد فقط) -->
     <div id="step2" style="display: none; margin-top: 15px;">
       <h2>تأكيد كود الحساب الجديد</h2>
       <p style="font-size:12px; color:#8b949e; margin-bottom:14px; text-align:center;">اكتب كود الـ 6 أرقام الذي ظهر أعلى الشاشة:</p>
       <input type="text" id="enteredCode" placeholder="أدخل الكود المكون من 6 أرقام" maxlength="6">
-      <button class="btn" onclick="verifyCode()">تأكيد وإنشاء الحساب</button>
-      <button class="btn resend-btn" onclick="resendCode()">🔄 إعادة إرسال الكود</button>
+      <button type="button" class="btn" onclick="verifyCode()">تأكيد وإنشاء الحساب</button>
+      <button type="button" class="btn resend-btn" onclick="resendCode()">🔄 إعادة إرسال الكود</button>
     </div>
   </div>
 
@@ -372,7 +322,6 @@
       <p>تصفح عروض الشحن والمكافآت واختر ما يناسبك بكل سهولة.</p>
     </div>
 
-    <!-- الجزء الأول: طرق الدفع -->
     <div class="section-header">💳 طرق الدفع المتاحة</div>
     <div class="payment-box">
       <div class="payment-options">
@@ -381,89 +330,86 @@
       </div>
     </div>
 
-    <!-- الجزء الثاني: العروض والمكافآت -->
     <div class="section-header">🎁 عروض اللاعبين والمكافآت</div>
     <div class="card-grid">
       <div class="card" id="card-suarez">
         <img src="https://img.icons8.com/emoji/96/fire.png" class="coin-img" alt="سواريز">
         <h3>سواريز</h3>
         <div class="price">13 د.ل</div>
-        <button class="cart-btn" onclick="togglePackage('عرض اللاعب سواريز (13 د.ل)', 'card-suarez')">إضافة إلى السلة 🛒</button>
+        <button type="button" class="cart-btn" onclick="togglePackage('عرض اللاعب سواريز (13 د.ل)', 'card-suarez')">إضافة إلى السلة 🛒</button>
       </div>
       <div class="card" id="card-casillas">
         <img src="https://img.icons8.com/emoji/96/gloves.png" class="coin-img" alt="كاسياس">
         <h3>كاسياس</h3>
         <div class="price">33 د.ل</div>
-        <button class="cart-btn" onclick="togglePackage('عرض اللاعب كاسياس (33 د.ل)', 'card-casillas')">إضافة إلى السلة 🛒</button>
+        <button type="button" class="cart-btn" onclick="togglePackage('عرض اللاعب كاسياس (33 د.ل)', 'card-casillas')">إضافة إلى السلة 🛒</button>
       </div>
     </div>
 
-    <!-- الجزء الثالث: شحن الكوينز -->
     <div class="section-header">🪙 شحن كوينز إي فوتبول</div>
     <div class="card-grid">
       <div class="card" id="card-100">
         <img src="https://img.icons8.com/gold-badges/96/gold-bars.png" class="coin-img" alt="كوينز">
         <h3>100 كوين</h3>
         <div class="price">13 د.ل</div>
-        <button class="cart-btn" onclick="togglePackage('100 كوين (13 د.ل)', 'card-100')">إضافة إلى السلة 🛒</button>
+        <button type="button" class="cart-btn" onclick="togglePackage('100 كوين (13 د.ل)', 'card-100')">إضافة إلى السلة 🛒</button>
       </div>
       <div class="card" id="card-300">
         <img src="https://img.icons8.com/gold-badges/96/gold-bars.png" class="coin-img" alt="كوينز">
         <h3>300 كوين</h3>
         <div class="price">33 د.ل</div>
-        <button class="cart-btn" onclick="togglePackage('300 كوين (33 د.ل)', 'card-300')">إضافة إلى السلة 🛒</button>
+        <button type="button" class="cart-btn" onclick="togglePackage('300 كوين (33 د.ل)', 'card-300')">إضافة إلى السلة 🛒</button>
       </div>
       <div class="card" id="card-500">
         <img src="https://img.icons8.com/gold-badges/96/gold-bars.png" class="coin-img" alt="كوينز">
         <h3>500 كوين</h3>
         <div class="price">55 د.ل</div>
-        <button class="cart-btn" onclick="togglePackage('500 كوين (55 د.ل)', 'card-500')">إضافة إلى السلة 🛒</button>
+        <button type="button" class="cart-btn" onclick="togglePackage('500 كوين (55 د.ل)', 'card-500')">إضافة إلى السلة 🛒</button>
       </div>
       <div class="card" id="card-1000">
         <img src="https://img.icons8.com/gold-badges/96/gold-bars.png" class="coin-img" alt="كوينز">
         <h3>1,000 كوين</h3>
         <div class="price">98 د.ل</div>
-        <button class="cart-btn" onclick="togglePackage('1,000 كوين (98 د.ل)', 'card-1000')">إضافة إلى السلة 🛒</button>
+        <button type="button" class="cart-btn" onclick="togglePackage('1,000 كوين (98 د.ل)', 'card-1000')">إضافة إلى السلة 🛒</button>
       </div>
       <div class="card" id="card-2000">
         <img src="https://img.icons8.com/gold-badges/96/gold-bars.png" class="coin-img" alt="كوينز">
         <h3>2,000 كوين</h3>
         <div class="price">185 د.ل</div>
-        <button class="cart-btn" onclick="togglePackage('2,000 كوين (185 د.ل)', 'card-2000')">إضافة إلى السلة 🛒</button>
+        <button type="button" class="cart-btn" onclick="togglePackage('2,000 كوين (185 د.ل)', 'card-2000')">إضافة إلى السلة 🛒</button>
       </div>
       <div class="card" id="card-3000">
         <img src="https://img.icons8.com/gold-badges/96/gold-bars.png" class="coin-img" alt="كوينز">
         <h3>3,000 كوين</h3>
         <div class="price">260 د.ل</div>
-        <button class="cart-btn" onclick="togglePackage('3,000 كوين (260 د.ل)', 'card-3000')">إضافة إلى السلة 🛒</button>
+        <button type="button" class="cart-btn" onclick="togglePackage('3,000 كوين (260 د.ل)', 'card-3000')">إضافة إلى السلة 🛒</button>
       </div>
       <div class="card" id="card-5000">
         <img src="https://img.icons8.com/gold-badges/96/gold-bars.png" class="coin-img" alt="كوينز">
         <h3>5,000 كوين</h3>
         <div class="price">395 د.ل</div>
-        <button class="cart-btn" onclick="togglePackage('5,000 كوين (395 د.ل)', 'card-5000')">إضافة إلى السلة 🛒</button>
+        <button type="button" class="cart-btn" onclick="togglePackage('5,000 كوين (395 د.ل)', 'card-5000')">إضافة إلى السلة 🛒</button>
       </div>
       <div class="card" id="card-10000">
         <img src="https://img.icons8.com/gold-badges/96/gold-bars.png" class="coin-img" alt="كوينز">
         <h3>10,000 كوين</h3>
         <div class="price">725 د.ل</div>
-        <button class="cart-btn" onclick="togglePackage('10,000 كوين (725 د.ل)', 'card-10000')">إضافة إلى السلة 🛒</button>
+        <button type="button" class="cart-btn" onclick="togglePackage('10,000 كوين (725 د.ل)', 'card-10000')">إضافة إلى السلة 🛒</button>
       </div>
       <div class="card" id="card-15000" style="grid-column: span 2;">
         <img src="https://img.icons8.com/gold-badges/96/gold-bars.png" class="coin-img" alt="كوينز">
         <h3>15,000 كوين</h3>
         <div class="price">1100 د.ل</div>
-        <button class="cart-btn" onclick="togglePackage('15,000 كوين (1100 د.ل)', 'card-15000')">إضافة إلى السلة 🛒</button>
+        <button type="button" class="cart-btn" onclick="togglePackage('15,000 كوين (1100 د.ل)', 'card-15000')">إضافة إلى السلة 🛒</button>
       </div>
     </div>
 
-    <!-- قسم إرسال الطلب في الأسفل -->
     <div class="form-section">
       <h2>📩 إرسال الطلب النهائي</h2>
       <p style="font-size:13px; color:#8b949e; margin-bottom:12px; text-align:center;">اخترت باقاتك؟ اختر الطريقة للإرسال الفوري:</p>
       <div class="contact-btns">
-        <button class="btn whatsapp-btn" onclick="sendOrder('whatsapp')">💬 إرسال الطلب عبر الواتساب</button>
-        <button class="btn telegram-btn" onclick="sendOrder('telegram')">✈️ إرسال الطلب عبر التليجرام</button>
+        <button type="button" class="btn whatsapp-btn" onclick="sendOrder('whatsapp')">💬 إرسال الطلب عبر الواتساب</button>
+        <button type="button" class="btn telegram-btn" onclick="sendOrder('telegram')">✈️ إرسال الطلب عبر التليجرام</button>
       </div>
     </div>
   </div>
@@ -473,13 +419,12 @@
     var generatedCode = "";
     var selectedPackages = [];
 
-    // دالة إظهار إشعار الترحيب الفخم لرجل الأعمال
     function showVipWelcome() {
       var toast = document.getElementById('vipWelcomeToast');
       toast.style.display = 'block';
       setTimeout(function() {
         toast.style.display = 'none';
-      }, 4000); // يختفي بعد 4 ثواني بطريقة راقية
+      }, 4000);
     }
 
     window.onload = function() {
@@ -487,18 +432,9 @@
       if (savedUser) {
         document.getElementById('authContainer').style.display = 'none';
         document.getElementById('storeScreen').style.display = 'block';
-        showVipWelcome(); // إظهار الترحيب الفخم عند الدخول التلقائي
+        showVipWelcome();
       }
     };
-
-    function isValidEmail(email) {
-      var atpos = email.indexOf("@");
-      var dotpos = email.lastIndexOf(".");
-      if (atpos < 1 || dotpos < atpos + 2 || dotpos + 2 >= email.length) {
-        return false;
-      }
-      return true;
-    }
 
     function switchMode(mode) {
       currentMode = mode;
@@ -524,15 +460,20 @@
     }
 
     function handleAuthAction() {
-      var email = document.getElementById('userEmail').value.trim();
-      var pass = document.getElementById('userPass').value;
+      var emailInput = document.getElementById('userEmail');
+      var passInput = document.getElementById('userPass');
       var statusDiv = document.getElementById('emailStatus');
+
+      if (!emailInput || !passInput) return;
+
+      var email = emailInput.value.trim();
+      var pass = passInput.value;
 
       statusDiv.style.display = 'block';
 
-      if (!isValidEmail(email)) {
+      if (!email.includes("@") || email.length < 5) {
         statusDiv.style.color = '#ff5555';
-        statusDiv.innerHTML = '❌ يرجى إدخال بريد إلكتروني صحيح (يحتوي على @).';
+        statusDiv.innerHTML = '❌ يرجى إدخال بريد إلكتروني صحيح.';
         return;
       }
 
@@ -553,22 +494,22 @@
           setTimeout(function() {
             document.getElementById('authContainer').style.display = 'none';
             document.getElementById('storeScreen').style.display = 'block';
-            showVipWelcome(); // إظهار الترحيب الفخم
-          }, 1000);
+            showVipWelcome();
+          }, 800);
         } else {
           statusDiv.style.color = '#ff5555';
-          statusDiv.innerHTML = '❌ ليس لديك حساب بهذا البريد أو كلمة السر غير صحيحة!';
+          statusDiv.innerHTML = '❌ الإيميل غير مسجل أو كلمة السر خطأ!';
         }
       } else {
         var existingPass = localStorage.getItem('pass_' + email);
         if (existingPass) {
           statusDiv.style.color = '#ff5555';
-          statusDiv.innerHTML = '⚠️ هذا البريد مسجل مسبقاً، قم بالدخول من خيار "لدي حساب قديم"!';
+          statusDiv.innerHTML = '⚠️ البريد مسجل مسبقاً، اختر "لدي حساب قديم"!';
           return;
         }
 
         statusDiv.style.color = '#2ea043';
-        statusDiv.innerHTML = '✅ تم إرسال كود التحقق بنجاح!';
+        statusDiv.innerHTML = '✅ تم إرسال كود التحقق أعلى الشاشة!';
         
         window.tempEmail = email;
         window.tempPass = pass;
@@ -578,7 +519,7 @@
         setTimeout(function() {
           document.getElementById('step1').style.display = 'none';
           document.getElementById('step2').style.display = 'block';
-        }, 1000);
+        }, 800);
       }
     }
 
@@ -591,16 +532,18 @@
 
       setTimeout(function() {
         notification.style.display = 'none';
-      }, 10000);
+      }, 15000);
     }
 
     function resendCode() {
       generateNewCode();
-      alert('تم إعادة إرسال كود تحقق جديد وظهر أعلى الشاشة لمدة 10 ثوانٍ!');
+      alert('تم إعادة إرسال الكود وظهوره أعلى الشاشة!');
     }
 
     function verifyCode() {
-      var inputCode = document.getElementById('enteredCode').value;
+      var inputCodeElem = document.getElementById('enteredCode');
+      if (!inputCodeElem) return;
+      var inputCode = inputCodeElem.value.trim();
 
       if(inputCode === generatedCode) {
         document.getElementById('topNotification').style.display = 'none';
@@ -608,4 +551,48 @@
         localStorage.setItem('pass_' + window.tempEmail, window.tempPass);
         localStorage.setItem('efbl_logged_user', window.tempEmail);
 
-        document.getElementById('authContainer').style.dis
+        document.getElementById('authContainer').style.display = 'none';
+        document.getElementById('storeScreen').style.display = 'block';
+        showVipWelcome();
+      } else {
+        alert('كود التحقق غير صحيح، تأكد من الأرقام الـ 6 الظاهرة بالأعلى.');
+      }
+    }
+
+    function togglePackage(pkgName, cardId) {
+      var cardElement = document.getElementById(cardId);
+      var btnElement = cardElement.querySelector('.cart-btn');
+      var index = selectedPackages.indexOf(pkgName);
+
+      if (index === -1) {
+        selectedPackages.push(pkgName);
+        cardElement.classList.add('selected');
+        btnElement.innerHTML = 'تمت الإضافة ✅';
+        btnElement.style.background = '#155724';
+      } else {
+        selectedPackages.splice(index, 1);
+        cardElement.classList.remove('selected');
+        btnElement.innerHTML = 'إضافة إلى السلة 🛒';
+        btnElement.style.background = 'linear-gradient(135deg, #238636, #1f6feb)';
+      }
+    }
+
+    function sendOrder(platform) {
+      if(selectedPackages.length === 0) {
+        alert('اختر باقة واحدة على الأقل من السلة أولاً!');
+        return;
+      }
+
+      var msg = "مرحباً، أريد طلب الباقات التالية:\n- " + selectedPackages.join("\n- ");
+      
+      if(platform === 'whatsapp') {
+        window.open("https://wa.me/218943437286?text=" + encodeURIComponent(msg), '_blank');
+      } else if(platform === 'telegram') {
+        window.open("https://t.me/mo_om_oi?text=" + encodeURIComponent(msg), '_blank');
+      }
+    }
+  </script>
+
+</body>
+</html>
+
