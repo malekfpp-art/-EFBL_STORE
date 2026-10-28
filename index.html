@@ -12,26 +12,109 @@
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
     body {
-      background-color: #0b0f19;
+      background-color: #080b12;
       color: #fff;
       padding: 15px;
+      overflow-x: hidden;
     }
 
-    /* إشعار كود التحقق العلوي */
+    /* ==========================================
+       شاشة الافتتاحية الخرافية (SPLASH SCREEN)
+       ========================================== */
+    #splashScreen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: radial-gradient(circle at center, #111927 0%, #05070a 100%);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 99999;
+      transition: opacity 0.8s ease, visibility 0.8s ease;
+    }
+
+    .splash-logo-container {
+      text-align: center;
+      animation: logoPulse 2s infinite alternate;
+    }
+
+    .splash-title-efbl {
+      font-size: 58px;
+      font-weight: 900;
+      letter-spacing: 6px;
+      background: linear-gradient(130deg, #00d2ff, #3a7bd5, #00f2fe);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 25px rgba(0, 210, 255, 0.6);
+      line-height: 1.1;
+    }
+
+    .splash-title-store {
+      font-size: 38px;
+      font-weight: 800;
+      letter-spacing: 12px;
+      background: linear-gradient(130deg, #f2994a, #f2c94c);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 20px rgba(242, 201, 76, 0.5);
+      margin-top: 4px;
+    }
+
+    .splash-subtext {
+      margin-top: 25px;
+      font-size: 13px;
+      color: #8b949e;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    .splash-loader {
+      width: 50px;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      margin-top: 20px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .splash-loader-bar {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, #00d2ff, #f2c94c);
+      animation: loadingBar 2s ease-in-out forwards;
+    }
+
+    @keyframes logoPulse {
+      0% { transform: scale(0.98); }
+      100% { transform: scale(1.03); }
+    }
+
+    @keyframes loadingBar {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(0%); }
+    }
+
+    /* ==========================================
+       إشعارات وتنبيهات المتجر
+       ========================================== */
     .top-notification {
       display: none;
-      background: linear-gradient(135deg, #1f6feb, #238636);
+      background: linear-gradient(135deg, #0052d4, #4364f7, #6fb1fc);
       color: white;
       padding: 16px;
-      border-radius: 12px;
+      border-radius: 14px;
       text-align: center;
       margin-bottom: 15px;
       font-weight: bold;
-      box-shadow: 0 6px 20px rgba(35, 134, 54, 0.4);
-      border: 1px solid rgba(255,255,255,0.2);
+      box-shadow: 0 8px 25px rgba(67, 100, 247, 0.4);
+      border: 1px solid rgba(255,255,255,0.25);
     }
 
-    /* إشعار الترحيب الفخم الخاص برجل الأعمال */
     .vip-welcome-toast {
       display: none;
       position: fixed;
@@ -40,14 +123,14 @@
       transform: translateX(-50%);
       width: 90%;
       max-width: 400px;
-      background: linear-gradient(135deg, #111827, #1f2937, #374151);
+      background: linear-gradient(135deg, #0d131f, #172033);
       color: #ffffff;
       padding: 18px 20px;
-      border-radius: 16px;
+      border-radius: 18px;
       text-align: center;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 20px rgba(212, 175, 55, 0.3);
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.9), 0 0 25px rgba(242, 201, 76, 0.3);
       z-index: 9999;
-      border: 1px solid rgba(212, 175, 55, 0.4);
+      border: 1px solid rgba(242, 201, 76, 0.5);
     }
     .vip-welcome-toast h3 {
       font-size: 16px;
@@ -58,87 +141,98 @@
     .vip-welcome-toast span {
       display: inline-block;
       font-size: 14px;
-      color: #d4af37;
+      color: #f2c94c;
       font-weight: bold;
-      background: rgba(212, 175, 55, 0.1);
-      padding: 4px 12px;
-      border-radius: 8px;
-      border: 1px solid rgba(212, 175, 55, 0.3);
+      background: rgba(242, 201, 76, 0.12);
+      padding: 5px 14px;
+      border-radius: 10px;
+      border: 1px solid rgba(242, 201, 76, 0.4);
       margin-top: 4px;
     }
 
-    /* رسالة الترحيب داخل المتجر */
+    /* بنر الترحب الداخلي بأسلوب فخم بالليبي */
     .welcome-banner {
-      background: linear-gradient(135deg, #2ea043, #1f6feb);
-      padding: 15px;
-      border-radius: 12px;
+      background: linear-gradient(135deg, #111a2e, #0a1120);
+      border: 1px solid rgba(0, 210, 255, 0.3);
+      padding: 18px;
+      border-radius: 16px;
       text-align: center;
-      margin-bottom: 20px;
-      box-shadow: 0 6px 20px rgba(46, 160, 67, 0.4);
+      margin-bottom: 22px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5), inset 0 0 15px rgba(0, 210, 255, 0.1);
     }
     .welcome-banner h2 {
       font-size: 20px;
-      color: #fff;
-      margin-bottom: 4px;
+      background: linear-gradient(135deg, #00d2ff, #ffffff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 6px;
+      font-weight: 800;
     }
     .welcome-banner p {
-      font-size: 14px;
-      color: #e6edf3;
+      font-size: 13.5px;
+      color: #a0aec0;
+      line-height: 1.5;
     }
 
-    /* شاشات تسجيل الدخول */
+    /* ==========================================
+       واجهات تسجيل الدخول والمتجر
+       ========================================== */
     .auth-screen {
-      background: #161b22;
-      border: 1px solid #30363d;
-      padding: 24px;
-      border-radius: 16px;
-      margin-top: 20px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+      background: linear-gradient(145deg, #0f172a, #0b101d);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 26px;
+      border-radius: 20px;
+      margin-top: 10px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.8);
     }
     .auth-screen h2 {
-      font-size: 20px;
-      color: #58a6ff;
-      margin-bottom: 15px;
+      font-size: 22px;
+      background: linear-gradient(135deg, #00d2ff, #3a7bd5);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 18px;
       text-align: center;
+      font-weight: 800;
     }
     
     .store-screen {
       display: none;
     }
 
-    /* أزرار اختيار البداية */
     .mode-select-box {
       display: flex;
       gap: 10px;
-      margin-bottom: 15px;
+      margin-bottom: 18px;
     }
     .mode-btn {
       flex: 1;
       padding: 12px;
-      background: #21262d;
-      border: 1px solid #30363d;
-      color: #8b949e;
-      border-radius: 8px;
+      background: #141c2e;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #718096;
+      border-radius: 12px;
       cursor: pointer;
       font-weight: bold;
       font-size: 13px;
+      transition: all 0.3s ease;
     }
     .mode-btn.active {
-      background: #238636;
+      background: linear-gradient(135deg, #0052d4, #4364f7);
       color: #fff;
-      border-color: #2ea043;
+      border-color: #00d2ff;
+      box-shadow: 0 4px 15px rgba(67, 100, 247, 0.4);
     }
 
     .section-header {
       font-size: 18px;
-      color: #f0883e;
-      margin: 28px 0 12px 0;
+      color: #f2c94c;
+      margin: 30px 0 14px 0;
       display: flex;
       align-items: center;
       gap: 8px;
       font-weight: bold;
-      border-bottom: 2px solid #30363d;
-      padding-bottom: 6px;
+      border-bottom: 2px solid rgba(242, 201, 76, 0.3);
+      padding-bottom: 8px;
     }
 
     .card-grid {
@@ -148,23 +242,26 @@
       margin-bottom: 15px;
     }
     .card {
-      background: linear-gradient(145deg, #161b22, #11161d);
-      border: 2px solid #30363d;
-      border-radius: 16px;
-      padding: 16px 12px;
+      background: linear-gradient(145deg, #111927, #0b101a);
+      border: 1.5px solid rgba(255, 255, 255, 0.08);
+      border-radius: 18px;
+      padding: 18px 12px;
       text-align: center;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.5);
+      transition: transform 0.2s, border-color 0.2s;
     }
     .card.selected {
-      border-color: #2ea043;
-      background: #1c2533;
+      border-color: #00d2ff;
+      background: linear-gradient(145deg, #16243d, #0d1728);
+      box-shadow: 0 0 20px rgba(0, 210, 255, 0.3);
     }
     
     .card .coin-img {
-      width: 55px;
-      height: 55px;
+      width: 58px;
+      height: 58px;
       object-fit: contain;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
+      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.4));
     }
 
     .card h3 {
@@ -175,109 +272,147 @@
     }
     .card .price {
       font-size: 16px;
-      color: #58a6ff;
+      color: #00d2ff;
       margin-bottom: 12px;
-      font-weight: bold;
+      font-weight: 800;
     }
     
     .cart-btn {
-      background: linear-gradient(135deg, #238636, #1f6feb);
-      color: white;
+      background: linear-gradient(135deg, #11998e, #38ef7d);
+      color: #05130a;
       border: none;
-      padding: 10px 8px;
-      border-radius: 10px;
-      font-weight: bold;
+      padding: 11px 8px;
+      border-radius: 12px;
+      font-weight: 800;
       cursor: pointer;
       width: 100%;
       font-size: 13px;
+      box-shadow: 0 4px 15px rgba(56, 239, 125, 0.25);
+      transition: all 0.3s ease;
     }
 
     .payment-box {
-      background: #161b22;
-      border: 1px solid #30363d;
-      padding: 16px;
-      border-radius: 14px;
+      background: linear-gradient(145deg, #0f172a, #0b101d);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 18px;
+      border-radius: 16px;
       margin-bottom: 15px;
     }
     .payment-options {
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 10px;
       font-size: 14px;
-      color: #8b949e;
+      color: #a0aec0;
     }
     .payment-options span {
-      color: #2ea043;
+      color: #38ef7d;
       font-weight: bold;
     }
 
     .form-section {
-      background: #161b22;
-      border: 1px solid #30363d;
-      padding: 20px;
-      border-radius: 16px;
+      background: linear-gradient(145deg, #0f172a, #0b101d);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 22px;
+      border-radius: 18px;
       margin-top: 25px;
     }
     .form-section h2 {
-      font-size: 18px;
+      font-size: 19px;
       margin-bottom: 12px;
-      color: #2ea043;
+      color: #38ef7d;
       text-align: center;
+      font-weight: 800;
     }
 
     input[type="email"], input[type="password"], input[type="text"] {
       width: 100%;
-      padding: 12px;
+      padding: 14px;
       margin-bottom: 14px;
-      border-radius: 10px;
-      border: 1px solid #30363d;
-      background: #0d1117;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: #060911;
       color: white;
       font-size: 14px;
       outline: none;
+      transition: border-color 0.3s;
+    }
+
+    input[type="email"]:focus, input[type="password"]:focus, input[type="text"]:focus {
+      border-color: #00d2ff;
+      box-shadow: 0 0 10px rgba(0, 210, 255, 0.2);
     }
 
     .email-status {
       font-size: 13px;
-      margin-top: -10px;
-      margin-bottom: 12px;
+      margin-top: -8px;
+      margin-bottom: 14px;
       font-weight: bold;
       display: none;
     }
 
     .btn {
-      background: linear-gradient(135deg, #238636, #2ea043);
+      background: linear-gradient(135deg, #0052d4, #4364f7);
       color: white;
       border: none;
-      padding: 12px 14px;
-      border-radius: 10px;
+      padding: 14px 14px;
+      border-radius: 12px;
       font-weight: bold;
       cursor: pointer;
       width: 100%;
       font-size: 15px;
+      box-shadow: 0 5px 20px rgba(67, 100, 247, 0.35);
     }
 
     .resend-btn {
-      background: linear-gradient(135deg, #1f6feb, #388bfd);
-      margin-top: 8px;
+      background: linear-gradient(135deg, #f2994a, #f2c94c);
+      color: #111;
+      margin-top: 10px;
+      box-shadow: 0 5px 20px rgba(242, 201, 76, 0.3);
     }
 
     .contact-btns {
       display: flex;
       flex-direction: column;
       gap: 12px;
-      margin-top: 10px;
+      margin-top: 12px;
     }
-    .whatsapp-btn { background: linear-gradient(135deg, #25d366, #1ebe5d); }
-    .telegram-btn { background: linear-gradient(135deg, #0088cc, #0077b5); }
+    .whatsapp-btn { 
+      background: linear-gradient(135deg, #11998e, #38ef7d); 
+      color: #05130a; 
+      font-size: 16px;
+      font-weight: 800;
+      box-shadow: 0 5px 20px rgba(56, 239, 125, 0.3);
+    }
+    .telegram-btn { 
+      background: linear-gradient(135deg, #0088cc, #241468); 
+      color: #fff;
+      font-size: 16px;
+      font-weight: 800;
+      box-shadow: 0 5px 20px rgba(0, 136, 204, 0.3);
+    }
   </style>
 </head>
 <body>
 
+  <!-- ==========================================
+       شاشة الافتتاحية الخرافية (EFBL STORE)
+       ========================================== -->
+  <div id="splashScreen">
+    <div class="splash-logo-container">
+      <div class="splash-title-efbl">EFBL</div>
+      <div class="splash-title-store">STORE</div>
+      <div class="splash-subtext">أقوى متجر كوينز وعروض بيس في ليبيا</div>
+      <div class="splash-loader">
+        <div class="splash-loader-bar"></div>
+      </div>
+    </div>
+  </div>
+
   <!-- إشعار كود التحقق العلوي -->
   <div id="topNotification" class="top-notification">
-    📩 كود التحقق (6 أرقام): <span id="generatedCodeDisplay" style="background:#0b0f19; padding:4px 10px; border-radius:6px; letter-spacing:3px; color:#58a6ff;">------</span>
-    <div style="font-size:11px; color:#e6edf3; margin-top:5px;">سيختفي هذا الإشعار خلال 15 ثانية!</div>
+    📩 كود التحقق (6 أرقام): <span id="generatedCodeDisplay" style="background:#060911; padding:4px 12px; border-radius:8px; letter-spacing:3px; color:#00d2ff;">------</span>
+    <div style="font-size:11px; color:#e2e8f0; margin-top:5px;">سيختفي هذا الإشعار خلال 15 ثانية!</div>
   </div>
 
   <!-- إشعار الترحيب الفخم (رجل أعمال) -->
@@ -296,7 +431,7 @@
     </div>
 
     <div id="step1">
-      <p id="authSubtitle" style="font-size:12px; color:#8b949e; margin-bottom:14px; text-align:center;">أدخل بريدك وكلمة السر لتسجيل الدخول بحسابك القديم</p>
+      <p id="authSubtitle" style="font-size:12px; color:#a0aec0; margin-bottom:14px; text-align:center;">أدخل بريدك وكلمة السر لتسجيل الدخول بحسابك القديم</p>
       
       <input type="email" id="userEmail" placeholder="البريد الإلكتروني (مثال: user@gmail.com)">
       <div id="emailStatus" class="email-status"></div>
@@ -307,7 +442,7 @@
 
     <div id="step2" style="display: none; margin-top: 15px;">
       <h2>تأكيد كود الحساب الجديد</h2>
-      <p style="font-size:12px; color:#8b949e; margin-bottom:14px; text-align:center;">اكتب كود الـ 6 أرقام الذي ظهر أعلى الشاشة:</p>
+      <p style="font-size:12px; color:#a0aec0; margin-bottom:14px; text-align:center;">اكتب كود الـ 6 أرقام الذي ظهر أعلى الشاشة:</p>
       <input type="text" id="enteredCode" placeholder="أدخل الكود المكون من 6 أرقام" maxlength="6">
       <button type="button" class="btn" onclick="verifyCode()">تأكيد وإنشاء الحساب</button>
       <button type="button" class="btn resend-btn" onclick="resendCode()">🔄 إعادة إرسال الكود</button>
@@ -318,8 +453,8 @@
   <div id="storeScreen" class="store-screen">
     
     <div class="welcome-banner">
-      <h2>🎉 أهلاً بك في متجر EFBL COINS!</h2>
-      <p>تصفح عروض الشحن والمكافآت واختر ما يناسبك بكل سهولة.</p>
+      <h2>🎉 أهلاً بك في متجر EFBL STORE العظمة!</h2>
+      <p>سرعة في التسليم، أمان كامل، وأفضل أسعار كوينز وعروض بيس في ليبيا.</p>
     </div>
 
     <div class="section-header">💳 طرق الدفع المتاحة</div>
@@ -406,7 +541,7 @@
 
     <div class="form-section">
       <h2>📩 إرسال الطلب النهائي</h2>
-      <p style="font-size:13px; color:#8b949e; margin-bottom:12px; text-align:center;">اخترت باقاتك؟ اختر الطريقة للإرسال الفوري:</p>
+      <p style="font-size:13px; color:#a0aec0; margin-bottom:14px; text-align:center;">اخترت باقاتك؟ اختر الطريقة للإرسال الفوري للادارة:</p>
       <div class="contact-btns">
         <button type="button" class="btn whatsapp-btn" onclick="sendOrder('whatsapp')">💬 إرسال الطلب عبر الواتساب</button>
         <button type="button" class="btn telegram-btn" onclick="sendOrder('telegram')">✈️ إرسال الطلب عبر التليجرام</button>
@@ -419,6 +554,24 @@
     var generatedCode = "";
     var selectedPackages = [];
 
+    // إخفاء الشاشة الافتتاحية بعد 2.5 ثانية بسلاسة
+    window.addEventListener('load', function() {
+      setTimeout(function() {
+        var splash = document.getElementById('splashScreen');
+        if(splash) {
+          splash.style.opacity = '0';
+          splash.style.visibility = 'hidden';
+        }
+      }, 2500);
+
+      var savedUser = localStorage.getItem('efbl_logged_user');
+      if (savedUser) {
+        document.getElementById('authContainer').style.display = 'none';
+        document.getElementById('storeScreen').style.display = 'block';
+        showVipWelcome();
+      }
+    });
+
     function showVipWelcome() {
       var toast = document.getElementById('vipWelcomeToast');
       toast.style.display = 'block';
@@ -426,15 +579,6 @@
         toast.style.display = 'none';
       }, 4000);
     }
-
-    window.onload = function() {
-      var savedUser = localStorage.getItem('efbl_logged_user');
-      if (savedUser) {
-        document.getElementById('authContainer').style.display = 'none';
-        document.getElementById('storeScreen').style.display = 'block';
-        showVipWelcome();
-      }
-    };
 
     function switchMode(mode) {
       currentMode = mode;
@@ -461,138 +605,5 @@
 
     function handleAuthAction() {
       var emailInput = document.getElementById('userEmail');
-      var passInput = document.getElementById('userPass');
-      var statusDiv = document.getElementById('emailStatus');
-
-      if (!emailInput || !passInput) return;
-
-      var email = emailInput.value.trim();
-      var pass = passInput.value;
-
-      statusDiv.style.display = 'block';
-
-      if (!email.includes("@") || email.length < 5) {
-        statusDiv.style.color = '#ff5555';
-        statusDiv.innerHTML = '❌ يرجى إدخال بريد إلكتروني صحيح.';
-        return;
-      }
-
-      if (!pass) {
-        statusDiv.style.color = '#ff5555';
-        statusDiv.innerHTML = '❌ يرجى كتابة كلمة السر!';
-        return;
-      }
-
-      if (currentMode === 'old') {
-        var savedPass = localStorage.getItem('pass_' + email);
-        if (savedPass && savedPass === pass) {
-          statusDiv.style.color = '#2ea043';
-          statusDiv.innerHTML = '✅ تم تسجيل الدخول بنجاح!';
-          
-          localStorage.setItem('efbl_logged_user', email);
-
-          setTimeout(function() {
-            document.getElementById('authContainer').style.display = 'none';
-            document.getElementById('storeScreen').style.display = 'block';
-            showVipWelcome();
-          }, 800);
-        } else {
-          statusDiv.style.color = '#ff5555';
-          statusDiv.innerHTML = '❌ الإيميل غير مسجل أو كلمة السر خطأ!';
-        }
-      } else {
-        var existingPass = localStorage.getItem('pass_' + email);
-        if (existingPass) {
-          statusDiv.style.color = '#ff5555';
-          statusDiv.innerHTML = '⚠️ البريد مسجل مسبقاً، اختر "لدي حساب قديم"!';
-          return;
-        }
-
-        statusDiv.style.color = '#2ea043';
-        statusDiv.innerHTML = '✅ تم إرسال كود التحقق أعلى الشاشة!';
-        
-        window.tempEmail = email;
-        window.tempPass = pass;
-
-        generateNewCode();
-
-        setTimeout(function() {
-          document.getElementById('step1').style.display = 'none';
-          document.getElementById('step2').style.display = 'block';
-        }, 800);
-      }
-    }
-
-    function generateNewCode() {
-      generatedCode = Math.floor(100000 + Math.random() * 900000).toString();
+      var passInp
       
-      var notification = document.getElementById('topNotification');
-      document.getElementById('generatedCodeDisplay').innerText = generatedCode;
-      notification.style.display = 'block';
-
-      setTimeout(function() {
-        notification.style.display = 'none';
-      }, 15000);
-    }
-
-    function resendCode() {
-      generateNewCode();
-      alert('تم إعادة إرسال الكود وظهوره أعلى الشاشة!');
-    }
-
-    function verifyCode() {
-      var inputCodeElem = document.getElementById('enteredCode');
-      if (!inputCodeElem) return;
-      var inputCode = inputCodeElem.value.trim();
-
-      if(inputCode === generatedCode) {
-        document.getElementById('topNotification').style.display = 'none';
-        
-        localStorage.setItem('pass_' + window.tempEmail, window.tempPass);
-        localStorage.setItem('efbl_logged_user', window.tempEmail);
-
-        document.getElementById('authContainer').style.display = 'none';
-        document.getElementById('storeScreen').style.display = 'block';
-        showVipWelcome();
-      } else {
-        alert('كود التحقق غير صحيح، تأكد من الأرقام الـ 6 الظاهرة بالأعلى.');
-      }
-    }
-
-    function togglePackage(pkgName, cardId) {
-      var cardElement = document.getElementById(cardId);
-      var btnElement = cardElement.querySelector('.cart-btn');
-      var index = selectedPackages.indexOf(pkgName);
-
-      if (index === -1) {
-        selectedPackages.push(pkgName);
-        cardElement.classList.add('selected');
-        btnElement.innerHTML = 'تمت الإضافة ✅';
-        btnElement.style.background = '#155724';
-      } else {
-        selectedPackages.splice(index, 1);
-        cardElement.classList.remove('selected');
-        btnElement.innerHTML = 'إضافة إلى السلة 🛒';
-        btnElement.style.background = 'linear-gradient(135deg, #238636, #1f6feb)';
-      }
-    }
-
-    function sendOrder(platform) {
-      if(selectedPackages.length === 0) {
-        alert('اختر باقة واحدة على الأقل من السلة أولاً!');
-        return;
-      }
-
-      var msg = "مرحباً، أريد طلب الباقات التالية:\n- " + selectedPackages.join("\n- ");
-      
-      if(platform === 'whatsapp') {
-        window.open("https://wa.me/218943437286?text=" + encodeURIComponent(msg), '_blank');
-      } else if(platform === 'telegram') {
-        window.open("https://t.me/mo_om_oi?text=" + encodeURIComponent(msg), '_blank');
-      }
-    }
-  </script>
-
-</body>
-</html>
-
