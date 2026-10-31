@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl" id="htmlRoot">
 <head>
@@ -326,6 +325,10 @@ input:focus, textarea:focus {
   width: 100%;
   font-size: 15px;
 }
+.btn:disabled {
+  opacity: .6;
+  cursor: not-allowed;
+}
 .resend-btn {
   background: linear-gradient(135deg, #f2994a, #f2c94c);
   color: #111;
@@ -472,11 +475,14 @@ input:focus, textarea:focus {
   <div class="top-bar-controls">
     <button type="button" class="lang-switcher" onclick="toggleLanguage()">🌐 <span id="langText">English</span></button>
   </div>
+
   <h2 data-i18n="authTitle">بوابة دخول المتجر</h2>
+
   <div class="mode-select-box">
     <button id="btnModeOld" type="button" class="mode-btn active" onclick="switchMode('old')" data-i18n="oldAcc">لدي حساب قديم</button>
     <button id="btnModeNew" type="button" class="mode-btn" onclick="switchMode('new')" data-i18n="newAcc">إنشاء حساب جديد</button>
   </div>
+
   <div id="step1">
     <p id="authSubtitle" style="font-size:12px;color:#a0aec0;margin-bottom:14px;text-align:center;" data-i18n="oldSub">أدخل بريدك وكلمة السر لتسجيل الدخول بحسابك القديم</p>
     <input type="email" id="userEmail" placeholder="البريد الإلكتروني (مثال: user@gmail.com)">
@@ -484,15 +490,16 @@ input:focus, textarea:focus {
     <input type="password" id="userPass" placeholder="كلمة السر">
     <button id="authMainBtn" type="button" class="btn" onclick="handleAuthAction()" data-i18n="loginBtn">تسجيل الدخول</button>
   </div>
+
   <div id="step2" style="display:none;margin-top:15px;">
     <h2 data-i18n="verifyTitle">تأكيد كود الحساب الجديد</h2>
     <p style="font-size:12px;color:#a0aec0;margin-bottom:14px;text-align:center;" data-i18n="verifySub">اكتب كود الـ 6 أرقام الذي ظهر أعلى الشاشة:</p>
     <input type="text" id="enteredCode" placeholder="أدخل الكود المكون من 6 أرقام" maxlength="6">
-    <button type="button" class="btn" onclick="verifyCode()" data-i18n="confirmBtn">تأكيد وإنشاء الحساب</button>
+    <div id="verifyStatus" class="email-status" style="margin-top:0;"></div>
+    <button id="confirmCodeBtn" type="button" class="btn" onclick="verifyCode()" data-i18n="confirmBtn">تأكيد وإنشاء الحساب</button>
     <button type="button" class="btn resend-btn" onclick="resendCode()" data-i18n="resendBtn">🔄 إعادة إرسال الكود</button>
   </div>
 </div>
-
 <div id="storeScreen" class="store-screen">
   <div class="top-bar-controls" style="margin-top: 5px;">
     <button type="button" class="lang-switcher" onclick="toggleLanguage()">🌐 <span id="langText2">English</span></button>
@@ -516,12 +523,15 @@ input:focus, textarea:focus {
     <div class="card-grid">
       <div class="card" id="card-suarez">
         <img src="https://img.icons8.com/emoji/96/fire.png" class="coin-img" alt="سواريز">
-        <h3 data-i18n="suarezTitle">سواريز</h3><div class="price">13 د.ل</div>
+        <h3 data-i18n="suarezTitle">سواريز</h3>
+        <div class="price">13 د.ل</div>
         <button type="button" class="cart-btn" onclick="togglePackage('عرض اللاعب سواريز (13 د.ل)', 13, 'card-suarez')" data-i18n="addCart">إضافة إلى السلة 🛒</button>
       </div>
+
       <div class="card" id="card-casillas">
         <img src="https://img.icons8.com/emoji/96/gloves.png" class="coin-img" alt="كاسياس">
-        <h3 data-i18n="casillasTitle">كاسياس</h3><div class="price">33 د.ل</div>
+        <h3 data-i18n="casillasTitle">كاسياس</h3>
+        <div class="price">33 د.ل</div>
         <button type="button" class="cart-btn" onclick="togglePackage('عرض اللاعب كاسياس (33 د.ل)', 33, 'card-casillas')" data-i18n="addCart">إضافة إلى السلة 🛒</button>
       </div>
     </div>
@@ -530,47 +540,64 @@ input:focus, textarea:focus {
     <div class="card-grid">
       <div class="card" id="card-100">
         <img src="https://img.icons8.com/gold-badges/96/gold-bars.png" class="coin-img" alt="كوينز">
-        <h3>100 كوين</h3><div class="price">13 د.ل</div>
+        <h3>100 كوين</h3>
+        <div class="price">13 د.ل</div>
         <button type="button" class="cart-btn" onclick="togglePackage('100 كوين (13 د.ل)', 13, 'card-100')" data-i18n="addCart">إضافة إلى السلة 🛒</button>
       </div>
+
       <div class="card" id="card-300">
         <img src="https://img.icons8.com/gold-badges/96/gold-bars.png" class="coin-img" alt="كوينز">
-        <h3>300 كوين</h3><div class="price">33 د.ل</div>
+        <h3>300 كوين</h3>
+        <div class="price">33 د.ل</div>
         <button type="button" class="cart-btn" onclick="togglePackage('300 كوين (33 د.ل)', 33, 'card-300')" data-i18n="addCart">إضافة إلى السلة 🛒</button>
       </div>
+
       <div class="card" id="card-500">
         <img src="https://img.icons8.com/gold-badges/96/gold-bars.png" class="coin-img" alt="كوينز">
-        <h3>500 كوين</h3><div class="price">55 د.ل</div>
+        <h3>500 كوين</h3>
+        <div class="price">55 د.ل</div>
         <button type="button" class="cart-btn" onclick="togglePackage('500 كوين (55 د.ل)', 55, 'card-500')" data-i18n="addCart">إضافة إلى السلة 🛒</button>
       </div>
+
       <div class="card" id="card-1000">
         <img src="https://img.icons8.com/gold-badges/96/gold-bars.png" class="coin-img" alt="كوينز">
-        <h3>1,000 كوين</h3><div class="price">98 د.ل</div>
+        <h3>1,000 كوين</h3>
+        <div class="price">98 د.ل</div>
         <button type="button" class="cart-btn" onclick="togglePackage('1,000 كوين (98 د.ل)', 98, 'card-1000')" data-i18n="addCart">إضافة إلى السلة 🛒</button>
       </div>
+
       <div class="card" id="card-2000">
         <img src="https://img.icons8.com/gold-badges/96/gold-bars.png" class="coin-img" alt="كوينز">
-        <h3>2,000 كوين</h3><div class="price">185 د.ل</div>
+        <h3>2,000 كوين</h3>
+        <div class="price">185 د.ل</div>
         <button type="button" class="cart-btn" onclick="togglePackage('2,000 كوين (185 د.ل)', 185, 'card-2000')" data-i18n="addCart">إضافة إلى السلة 🛒</button>
       </div>
+
       <div class="card" id="card-3000">
         <img src="https://img.icons8.com/gold-badges/96/gold-bars.png" class="coin-img" alt="كوينز">
-        <h3>3,000 كوين</h3><div class="price">260 د.ل</div>
+        <h3>3,000 كوين</h3>
+        <div class="price">260 د.ل</div>
         <button type="button" class="cart-btn" onclick="togglePackage('3,000 كوين (260 د.ل)', 260, 'card-3000')" data-i18n="addCart">إضافة إلى السلة 🛒</button>
       </div>
+
       <div class="card" id="card-5000">
         <img src="https://img.icons8.com/gold-badges/96/gold-bars.png" class="coin-img" alt="كوينز">
-        <h3>5,000 كوين</h3><div class="price">395 د.ل</div>
+        <h3>5,000 كوين</h3>
+        <div class="price">395 د.ل</div>
         <button type="button" class="cart-btn" onclick="togglePackage('5,000 كوين (395 د.ل)', 395, 'card-5000')" data-i18n="addCart">إضافة إلى السلة 🛒</button>
       </div>
+
       <div class="card" id="card-10000">
         <img src="https://img.icons8.com/gold-badges/96/gold-bars.png" class="coin-img" alt="كوينز">
-        <h3>10,000 كوين</h3><div class="price">725 د.ل</div>
+        <h3>10,000 كوين</h3>
+        <div class="price">725 د.ل</div>
         <button type="button" class="cart-btn" onclick="togglePackage('10,000 كوين (725 د.ل)', 725, 'card-10000')" data-i18n="addCart">إضافة إلى السلة 🛒</button>
       </div>
+
       <div class="card" id="card-15000" style="grid-column:span 2;">
         <img src="https://img.icons8.com/gold-badges/96/gold-bars.png" class="coin-img" alt="كوينز">
-        <h3>15,000 كوين</h3><div class="price">1100 د.ل</div>
+        <h3>15,000 كوين</h3>
+        <div class="price">1100 د.ل</div>
         <button type="button" class="cart-btn" onclick="togglePackage('15,000 كوين (1100 د.ل)', 1100, 'card-15000')" data-i18n="addCart">إضافة إلى السلة 🛒</button>
       </div>
     </div>
@@ -779,9 +806,16 @@ var translations = {
     navProfile:"Profile"
   }
 };
-
 function showStatus(message, success) {
-  var status = document.getElementById('emailStatus');
+  var step2 = document.getElementById('step2');
+  var isVerifying = step2 && step2.style.display !== 'none';
+
+  var status = document.getElementById(
+    isVerifying ? 'verifyStatus' : 'emailStatus'
+  );
+
+  if (!status) return;
+
   status.style.display = 'block';
   status.style.color = success ? '#38ef7d' : '#ff5555';
   status.innerText = message;
@@ -789,6 +823,7 @@ function showStatus(message, success) {
 
 function friendlyAuthError(error) {
   var code = error && error.code ? error.code : '';
+
   var ar = {
     'auth/email-already-in-use':'هذا البريد مسجل من قبل. سجّل الدخول.',
     'auth/invalid-email':'البريد الإلكتروني غير صحيح.',
@@ -800,6 +835,7 @@ function friendlyAuthError(error) {
     'auth/network-request-failed':'تعذر الاتصال. تحقق من الإنترنت.',
     'permission-denied':'قواعد قاعدة البيانات لا تسمح بهذه العملية.'
   };
+
   var en = {
     'auth/email-already-in-use':'This email is already registered.',
     'auth/invalid-email':'Invalid email address.',
@@ -811,6 +847,7 @@ function friendlyAuthError(error) {
     'auth/network-request-failed':'Network error. Check your connection.',
     'permission-denied':'Database rules do not allow this operation.'
   };
+
   return (currentLang === 'ar' ? ar[code] : en[code]) ||
     (currentLang === 'ar' ? 'حدث خطأ: ' : 'An error occurred: ') +
     (error && error.message ? error.message : 'Unknown error');
@@ -818,39 +855,73 @@ function friendlyAuthError(error) {
 
 function toggleLanguage() {
   currentLang = currentLang === 'ar' ? 'en' : 'ar';
+
   var root = document.getElementById('htmlRoot');
-          root.setAttribute('lang', currentLang);
+  root.setAttribute('lang', currentLang);
   root.setAttribute('dir', currentLang === 'ar' ? 'rtl' : 'ltr');
 
-  document.getElementById('langText').innerText = currentLang === 'ar' ? 'English' : 'عربي';
-  document.getElementById('langText2').innerText = currentLang === 'ar' ? 'English' : 'عربي';
+  document.getElementById('langText').innerText =
+    currentLang === 'ar' ? 'English' : 'عربي';
+
+  document.getElementById('langText2').innerText =
+    currentLang === 'ar' ? 'English' : 'عربي';
 
   document.querySelectorAll('[data-i18n]').forEach(function(el) {
     var key = el.getAttribute('data-i18n');
-    if (translations[currentLang][key]) el.innerText = translations[currentLang][key];
+    if (translations[currentLang][key]) {
+      el.innerText = translations[currentLang][key];
+    }
   });
 
   var supportInput = document.getElementById('supportMsgInput');
-  if (supportInput) supportInput.placeholder = translations[currentLang].supportPlaceholder;
+  if (supportInput) {
+    supportInput.placeholder = translations[currentLang].supportPlaceholder;
+  }
 
   var emailInput = document.getElementById('userEmail');
   var passInput = document.getElementById('userPass');
   var codeInput = document.getElementById('enteredCode');
-  if (emailInput) emailInput.placeholder = currentLang === 'ar' ? 'البريد الإلكتروني (مثال: user@gmail.com)' : 'Email address';
-  if (passInput) passInput.placeholder = currentLang === 'ar' ? 'كلمة السر' : 'Password';
-  if (codeInput) codeInput.placeholder = currentLang === 'ar' ? 'أدخل الكود المكون من 6 أرقام' : 'Enter the 6-digit code';
+
+  if (emailInput) {
+    emailInput.placeholder = currentLang === 'ar'
+      ? 'البريد الإلكتروني (مثال: user@gmail.com)'
+      : 'Email address';
+  }
+
+  if (passInput) {
+    passInput.placeholder = currentLang === 'ar'
+      ? 'كلمة السر'
+      : 'Password';
+  }
+
+  if (codeInput) {
+    codeInput.placeholder = currentLang === 'ar'
+      ? 'أدخل الكود المكون من 6 أرقام'
+      : 'Enter the 6-digit code';
+  }
 
   var subtitle = document.getElementById('authSubtitle');
-  if (subtitle) subtitle.innerText = translations[currentLang][currentMode === 'old' ? 'oldSub' : 'newSub'];
+
+  if (subtitle) {
+    subtitle.innerText = translations[currentLang][
+      currentMode === 'old' ? 'oldSub' : 'newSub'
+    ];
+  }
 
   var mainBtn = document.getElementById('authMainBtn');
-  if (mainBtn) mainBtn.innerText = translations[currentLang][currentMode === 'old' ? 'loginBtn' : 'newAcc'];
+
+  if (mainBtn) {
+    mainBtn.innerText = translations[currentLang][
+      currentMode === 'old' ? 'loginBtn' : 'newAcc'
+    ];
+  }
 
   updateCartDisplay();
 }
 
 function hideSplash() {
   var splash = document.getElementById('splashScreen');
+
   if (splash) {
     splash.style.opacity = '0';
     splash.style.visibility = 'hidden';
@@ -861,22 +932,29 @@ function hideSplash() {
 function showVipWelcome() {
   var toast = document.getElementById('vipWelcomeToast');
   if (!toast) return;
+
   toast.style.display = 'block';
-  setTimeout(function() { toast.style.display = 'none'; }, 4000);
+
+  setTimeout(function() {
+    toast.style.display = 'none';
+  }, 4000);
 }
 
 function showStore(user) {
   currentUser = user;
+
   document.getElementById('authContainer').style.display = 'none';
   document.getElementById('storeScreen').style.display = 'block';
   document.getElementById('bottomNavContainer').style.display = 'flex';
   document.getElementById('profileEmailVal').innerText = user.email || '';
+
   loadCart();
   updateCartDisplay();
 }
 
 function showAuth() {
   currentUser = null;
+
   document.getElementById('authContainer').style.display = 'block';
   document.getElementById('storeScreen').style.display = 'none';
   document.getElementById('bottomNavContainer').style.display = 'none';
@@ -885,6 +963,7 @@ function showAuth() {
 window.addEventListener('load', function() {
   setTimeout(hideSplash, 2500);
 });
+
 setTimeout(hideSplash, 6000);
 
 auth.onAuthStateChanged(function(user) {
@@ -897,13 +976,24 @@ auth.onAuthStateChanged(function(user) {
 
 function switchMode(mode) {
   currentMode = mode;
-  document.getElementById('btnModeOld').className = mode === 'old' ? 'mode-btn active' : 'mode-btn';
-  document.getElementById('btnModeNew').className = mode === 'new' ? 'mode-btn active' : 'mode-btn';
+
+  document.getElementById('btnModeOld').className =
+    mode === 'old' ? 'mode-btn active' : 'mode-btn';
+
+  document.getElementById('btnModeNew').className =
+    mode === 'new' ? 'mode-btn active' : 'mode-btn';
+
   document.getElementById('step1').style.display = 'block';
   document.getElementById('step2').style.display = 'none';
+
   document.getElementById('emailStatus').style.display = 'none';
-  document.getElementById('authSubtitle').innerText = translations[currentLang][mode === 'old' ? 'oldSub' : 'newSub'];
-  document.getElementById('authMainBtn').innerText = translations[currentLang][mode === 'old' ? 'loginBtn' : 'newAcc'];
+  document.getElementById('verifyStatus').style.display = 'none';
+
+  document.getElementById('authSubtitle').innerText =
+    translations[currentLang][mode === 'old' ? 'oldSub' : 'newSub'];
+
+  document.getElementById('authMainBtn').innerText =
+    translations[currentLang][mode === 'old' ? 'loginBtn' : 'newAcc'];
 }
 
 async function handleAuthAction() {
@@ -911,33 +1001,59 @@ async function handleAuthAction() {
 
   var emailInput = document.getElementById('userEmail');
   var passInput = document.getElementById('userPass');
+
   var email = emailInput.value.trim().toLowerCase();
   var pass = passInput.value;
 
   if (!emailInput.checkValidity() || email.length < 5) {
-    showStatus(currentLang === 'ar' ? '❌ أدخل بريدًا إلكترونيًا صحيحًا.' : '❌ Enter a valid email.', false);
+    showStatus(
+      currentLang === 'ar'
+        ? '❌ أدخل بريدًا إلكترونيًا صحيحًا.'
+        : '❌ Enter a valid email.',
+      false
+    );
     return;
   }
+
   if (pass.length < 6) {
-    showStatus(currentLang === 'ar' ? '❌ كلمة السر يجب أن تكون 6 أحرف على الأقل.' : '❌ Password must be at least 6 characters.', false);
+    showStatus(
+      currentLang === 'ar'
+        ? '❌ كلمة السر يجب أن تكون 6 أحرف على الأقل.'
+        : '❌ Password must be at least 6 characters.',
+      false
+    );
     return;
   }
 
   authBusy = true;
+
   var button = document.getElementById('authMainBtn');
   button.disabled = true;
 
   try {
     if (currentMode === 'old') {
       await auth.signInWithEmailAndPassword(email, pass);
-      showStatus(currentLang === 'ar' ? '✅ تم تسجيل الدخول!' : '✅ Logged in successfully!', true);
+
+      // الانتقال للمتجر يتم تلقائياً عند تأكيد حالة الحساب.
+      // لا نعرض رسالة نجاح داخل شاشة تسجيل الدخول بعد إخفائها.
     } else {
       tempEmail = email;
       tempPass = pass;
+
+      document.getElementById('emailStatus').style.display = 'none';
+      document.getElementById('verifyStatus').style.display = 'none';
+
       generateNewCode();
-      showStatus(currentLang === 'ar' ? '✅ ظهر كود التجربة أعلى الصفحة.' : '✅ Demo code shown at the top.', true);
+
       document.getElementById('step1').style.display = 'none';
       document.getElementById('step2').style.display = 'block';
+
+      showStatus(
+        currentLang === 'ar'
+          ? '✅ ظهر كود التجربة أعلى الصفحة.'
+          : '✅ Demo code shown at the top.',
+        true
+      );
     }
   } catch (error) {
     showStatus(friendlyAuthError(error), false);
@@ -948,12 +1064,18 @@ async function handleAuthAction() {
 }
 
 function generateNewCode() {
-  generatedCode = String(Math.floor(100000 + Math.random() * 900000));
-  document.getElementById('generatedCodeDisplay').innerText = generatedCode;
+  generatedCode = String(
+    Math.floor(100000 + Math.random() * 900000)
+  );
+
+  document.getElementById('generatedCodeDisplay').innerText =
+    generatedCode;
+
   var notification = document.getElementById('topNotification');
   notification.style.display = 'block';
 
   clearTimeout(window.efblCodeTimer);
+
   window.efblCodeTimer = setTimeout(function() {
     notification.style.display = 'none';
   }, 15000);
@@ -961,54 +1083,122 @@ function generateNewCode() {
 
 function resendCode() {
   generateNewCode();
-  alert(currentLang === 'ar' ? 'ظهر كود جديد أعلى الصفحة.' : 'A new code has appeared at the top.');
+
+  document.getElementById('verifyStatus').style.display = 'none';
+
+  alert(
+    currentLang === 'ar'
+      ? 'ظهر كود جديد أعلى الصفحة.'
+      : 'A new code has appeared at the top.'
+  );
 }
 
 async function verifyCode() {
   if (authBusy) return;
+
   var inputCode = document.getElementById('enteredCode').value.trim();
 
-  if (inputCode !== generatedCode || !tempEmail || !tempPass) {
-    alert(currentLang === 'ar' ? '❌ الكود غير صحيح. تأكد من الأرقام الستة.' : '❌ Invalid code. Check the 6 digits.');
+  if (
+    inputCode !== generatedCode ||
+    !tempEmail ||
+    !tempPass
+  ) {
+    showStatus(
+      currentLang === 'ar'
+        ? '❌ الكود غير صحيح. تأكد من الأرقام الستة.'
+        : '❌ Invalid code. Check the 6 digits.',
+      false
+    );
     return;
   }
 
   authBusy = true;
-  var confirmButton = document.querySelector('#step2 .btn');
+
+  var confirmButton = document.getElementById('confirmCodeBtn');
   confirmButton.disabled = true;
 
   try {
-    var credential = await auth.createUserWithEmailAndPassword(tempEmail, tempPass);
+    // إنشاء الحساب في نظام الحسابات أولاً.
+    var credential = await auth.createUserWithEmailAndPassword(
+      tempEmail,
+      tempPass
+    );
+
     var user = credential.user;
 
-    await db.collection('users').doc(user.uid).set({
-      email: user.email,
-      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-      accountStatus: 'active'
-    });
-
+    // إخفاء بيانات التحقق المؤقتة.
     document.getElementById('topNotification').style.display = 'none';
+    clearTimeout(window.efblCodeTimer);
+
     tempEmail = '';
     tempPass = '';
     generatedCode = '';
+
     document.getElementById('enteredCode').value = '';
+
+    // نجاح إنشاء الحساب يكفي لدخول المتجر.
+    // قاعدة البيانات لا تتحكم في السماح بالدخول.
     showStore(user);
     showVipWelcome();
+
+    // حفظ بيانات الحساب محاولة منفصلة وغير مانعة للدخول.
+    db.collection('users').doc(user.uid).set({
+      email: user.email,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+      accountStatus: 'active'
+    }, { merge: true }).catch(function(dbError) {
+      console.warn(
+        'تعذر حفظ بيانات الحساب في قاعدة البيانات، لكن تم إنشاء الحساب والدخول:',
+        dbError
+      );
+    });
+
   } catch (error) {
+    // إذا فشل إنشاء الحساب نفسه، لا يتم الدخول للمتجر.
     showStatus(friendlyAuthError(error), false);
+
+    document.getElementById('step1').style.display = 'none';
     document.getElementById('step2').style.display = 'block';
+
   } finally {
     authBusy = false;
     confirmButton.disabled = false;
   }
 }
+
 function getCartStorageKey() {
-  return currentUser ? 'efbl_cart_' + currentUser.uid : 'efbl_cart_guest';
+  return currentUser
+    ? 'efbl_cart_' + currentUser.uid
+    : 'efbl_cart_guest';
+}
+
+// قراءة السلة المحلية مع حماية الموقع من البيانات التالفة.
+function readLocalCart() {
+  try {
+    var raw = localStorage.getItem(getCartStorageKey());
+    var parsed = raw ? JSON.parse(raw) : [];
+
+    if (!Array.isArray(parsed)) return [];
+
+    return parsed.filter(function(item) {
+      return item &&
+        typeof item.cardId === 'string' &&
+        typeof item.name === 'string' &&
+        Number.isFinite(Number(item.price));
+    });
+
+  } catch (error) {
+    console.warn('تعذر قراءة السلة المحلية:', error);
+    return [];
+  }
 }
 
 function saveCart() {
   try {
-    localStorage.setItem(getCartStorageKey(), JSON.stringify(cartItems));
+    localStorage.setItem(
+      getCartStorageKey(),
+      JSON.stringify(cartItems)
+    );
   } catch (error) {
     console.warn('تعذر حفظ السلة محلياً:', error);
   }
@@ -1026,19 +1216,36 @@ function saveCart() {
 async function loadCart() {
   if (!currentUser) return;
 
-  try {
-    var saved = await db.collection('users').doc(currentUser.uid).get();
+  var loadingUserId = currentUser.uid;
 
-    if (saved.exists && Array.isArray(saved.data().cartItems)) {
-      cartItems = saved.data().cartItems;
+  try {
+    var saved = await db.collection('users')
+      .doc(loadingUserId)
+      .get();
+
+    // التأكد أن المستخدم لم يتغير أثناء تحميل السلة.
+    if (!currentUser || currentUser.uid !== loadingUserId) return;
+
+    if (
+      saved.exists &&
+      Array.isArray(saved.data().cartItems)
+    ) {
+      cartItems = saved.data().cartItems.filter(function(item) {
+        return item &&
+          typeof item.cardId === 'string' &&
+          typeof item.name === 'string' &&
+          Number.isFinite(Number(item.price));
+      });
     } else {
-      var localCart = localStorage.getItem(getCartStorageKey());
-      cartItems = localCart ? JSON.parse(localCart) : [];
+      cartItems = readLocalCart();
     }
+
   } catch (error) {
     console.warn('تعذر تحميل السلة من قاعدة البيانات:', error);
-    var fallback = localStorage.getItem(getCartStorageKey());
-    cartItems = fallback ? JSON.parse(fallback) : [];
+
+    if (!currentUser || currentUser.uid !== loadingUserId) return;
+
+    cartItems = readLocalCart();
   }
 
   restoreSelectedCards();
@@ -1048,16 +1255,27 @@ async function loadCart() {
 function restoreSelectedCards() {
   document.querySelectorAll('.card').forEach(function(card) {
     card.classList.remove('selected');
+
     var button = card.querySelector('.cart-btn');
-    if (button) button.innerText = translations[currentLang].addCart;
+
+    if (button) {
+      button.innerText = translations[currentLang].addCart;
+    }
   });
 
   cartItems.forEach(function(item) {
     var card = document.getElementById(item.cardId);
+
     if (card) {
       card.classList.add('selected');
+
       var button = card.querySelector('.cart-btn');
-      if (button) button.innerText = currentLang === 'ar' ? 'تمت الإضافة ✅' : 'Added ✅';
+
+      if (button) {
+        button.innerText = currentLang === 'ar'
+          ? 'تمت الإضافة ✅'
+          : 'Added ✅';
+      }
     }
   });
 }
@@ -1067,17 +1285,29 @@ function togglePackage(pkgName, pkgPrice, cardId) {
   if (!cardElement) return;
 
   var btnElement = cardElement.querySelector('.cart-btn');
+
   var existingIndex = cartItems.findIndex(function(item) {
     return item.cardId === cardId;
   });
 
   if (existingIndex === -1) {
-    cartItems.push({ name: pkgName, price: pkgPrice, cardId: cardId });
+    cartItems.push({
+      name: pkgName,
+      price: pkgPrice,
+      cardId: cardId
+    });
+
     cardElement.classList.add('selected');
-    btnElement.innerText = currentLang === 'ar' ? 'تمت الإضافة ✅' : 'Added ✅';
+
+    btnElement.innerText = currentLang === 'ar'
+      ? 'تمت الإضافة ✅'
+      : 'Added ✅';
+
   } else {
     cartItems.splice(existingIndex, 1);
+
     cardElement.classList.remove('selected');
+
     btnElement.innerText = translations[currentLang].addCart;
   }
 
@@ -1088,52 +1318,75 @@ function togglePackage(pkgName, pkgPrice, cardId) {
 function updateCartDisplay() {
   var listContainer = document.getElementById('cartItemsList');
   var totalPriceDisplay = document.getElementById('totalPriceDisplay');
+
   if (!listContainer || !totalPriceDisplay) return;
 
   if (cartItems.length === 0) {
-    listContainer.innerHTML = '<li style="color:#a0aec0;text-align:center;"></li>';
-    listContainer.firstElementChild.textContent = translations[currentLang].emptyCart;
-    totalPriceDisplay.innerText = translations[currentLang].totalPrice + '0 ' + (currentLang === 'ar' ? 'د.ل' : 'LYD');
+    listContainer.innerHTML =
+      '<li style="color:#a0aec0;text-align:center;"></li>';
+
+    listContainer.firstElementChild.textContent =
+      translations[currentLang].emptyCart;
+
+    totalPriceDisplay.innerText =
+      translations[currentLang].totalPrice +
+      '0 ' +
+      (currentLang === 'ar' ? 'د.ل' : 'LYD');
+
     return;
   }
 
   listContainer.innerHTML = '';
+
   var totalSum = 0;
 
-  cartItems.forEach(function(item, idx) {
+  cartItems.forEach(function(item) {
     totalSum += Number(item.price) || 0;
 
     var li = document.createElement('li');
+
     var nameSpan = document.createElement('span');
     nameSpan.textContent = item.name;
 
     var removeButton = document.createElement('button');
     removeButton.type = 'button';
     removeButton.textContent = translations[currentLang].removeCart;
-    removeButton.style.cssText = 'background:none;border:none;color:#ff5555;cursor:pointer;font-weight:bold;';
+
+    removeButton.style.cssText =
+      'background:none;border:none;color:#ff5555;cursor:pointer;font-weight:bold;';
+
     removeButton.addEventListener('click', function() {
       removeCartItem(item.cardId);
     });
 
     li.appendChild(nameSpan);
     li.appendChild(removeButton);
+
     listContainer.appendChild(li);
   });
 
   totalPriceDisplay.innerText =
-    translations[currentLang].totalPrice + totalSum + ' ' +
+    translations[currentLang].totalPrice +
+    totalSum +
+    ' ' +
     (currentLang === 'ar' ? 'د.ل' : 'LYD');
 }
+
 function removeCartItem(cardId) {
   cartItems = cartItems.filter(function(item) {
     return item.cardId !== cardId;
   });
 
   var cardElement = document.getElementById(cardId);
+
   if (cardElement) {
     cardElement.classList.remove('selected');
+
     var btn = cardElement.querySelector('.cart-btn');
-    if (btn) btn.innerText = translations[currentLang].addCart;
+
+    if (btn) {
+      btn.innerText = translations[currentLang].addCart;
+    }
   }
 
   saveCart();
@@ -1146,26 +1399,46 @@ function switchSection(sectionId, btnElement) {
   });
 
   var targetSec = document.getElementById('sec-' + sectionId);
-  if (targetSec) targetSec.classList.add('active-section');
+
+  if (targetSec) {
+    targetSec.classList.add('active-section');
+  }
 
   document.querySelectorAll('.nav-item').forEach(function(nav) {
     nav.classList.remove('active');
   });
 
-  if (btnElement) btnElement.classList.add('active');
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  if (btnElement) {
+    btnElement.classList.add('active');
+  }
+
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth'
+  });
 }
 
 function sendOrder(platform) {
   if (cartItems.length === 0) {
-    alert(currentLang === 'ar' ? 'اختر باقة واحدة على الأقل أولًا!' : 'Select at least one package first!');
+    alert(
+      currentLang === 'ar'
+        ? 'اختر باقة واحدة على الأقل أولًا!'
+        : 'Select at least one package first!'
+    );
     return;
   }
 
-  var selectedPay = document.querySelector('input[name="payMethod"]:checked').value;
+  var selectedPay = document.querySelector(
+    'input[name="payMethod"]:checked'
+  ).value;
+
   var payText = selectedPay === 'bank'
-    ? (currentLang === 'ar' ? 'تحويل مصرفي (وفراً وأقل سعراً)' : 'Bank Transfer')
-    : (currentLang === 'ar' ? 'كروت ليبيانا' : 'Libyana Cards');
+    ? (currentLang === 'ar'
+        ? 'تحويل مصرفي (وفراً وأقل سعراً)'
+        : 'Bank Transfer')
+    : (currentLang === 'ar'
+        ? 'كروت ليبيانا'
+        : 'Libyana Cards');
 
   var pkgNames = cartItems.map(function(item) {
     return item.name;
@@ -1177,16 +1450,29 @@ function sendOrder(platform) {
 
   var msg = currentLang === 'ar'
     ? 'مرحبًا إدارة EFBL STORE، أريـد طلب الباقات التالية:\n- ' +
-      pkgNames + '\n💰 المجموع الإجمالي: ' + totalSum +
-      ' د.ل\n💳 طريقة الدفع: ' + payText
+      pkgNames +
+      '\n💰 المجموع الإجمالي: ' +
+      totalSum +
+      ' د.ل\n💳 طريقة الدفع: ' +
+      payText
     : 'Hello EFBL STORE, I want to order:\n- ' +
-      pkgNames + '\n💰 Total: ' + totalSum +
-      ' LYD\n💳 Payment: ' + payText;
+      pkgNames +
+      '\n💰 Total: ' +
+      totalSum +
+      ' LYD\n💳 Payment: ' +
+      payText;
 
   if (platform === 'whatsapp') {
-    window.open('https://wa.me/218943437286?text=' + encodeURIComponent(msg), '_blank');
+    window.open(
+      'https://wa.me/218943437286?text=' + encodeURIComponent(msg),
+      '_blank'
+    );
+
   } else if (platform === 'telegram') {
-    window.open('https://t.me/mo_om_oi?text=' + encodeURIComponent(msg), '_blank');
+    window.open(
+      'https://t.me/mo_om_oi?text=' + encodeURIComponent(msg),
+      '_blank'
+    );
   }
 }
 
@@ -1195,9 +1481,11 @@ function sendSupportMessage() {
   var txt = msgInput.value.trim();
 
   if (txt.length < 3) {
-    alert(currentLang === 'ar'
-      ? 'الرجاء كتابة تفاصيل الاستفسار أو المشكلة أولاً.'
-      : 'Please write your inquiry or problem details first.');
+    alert(
+      currentLang === 'ar'
+        ? 'الرجاء كتابة تفاصيل الاستفسار أو المشكلة أولاً.'
+        : 'Please write your inquiry or problem details first.'
+    );
     return;
   }
 
@@ -1205,19 +1493,25 @@ function sendSupportMessage() {
     ? 'السلام عليكم فريق دعم EFBL، لدي الاستفسار التالي:\n\n' + txt
     : 'Hello EFBL Support, I have this inquiry:\n\n' + txt;
 
-  window.open('https://wa.me/218943437286?text=' + encodeURIComponent(supportMsg), '_blank');
+  window.open(
+    'https://wa.me/218943437286?text=' + encodeURIComponent(supportMsg),
+    '_blank'
+  );
 }
 
 async function logoutUser() {
   try {
     await auth.signOut();
+
     cartItems = [];
+
     showAuth();
     switchMode('old');
+
   } catch (error) {
     alert(friendlyAuthError(error));
   }
 }
 </script>
 </body>
-</html>  
+</html>
