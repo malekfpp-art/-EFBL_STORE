@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>EFBL COINS STORE</title>
+
 <style>
 * {
   box-sizing: border-box;
@@ -490,12 +491,12 @@ input:focus, textarea:focus {
     <button type="button" class="btn resend-btn" onclick="resendCode()" data-i18n="resendBtn">🔄 إعادة إرسال الكود</button>
   </div>
 </div>
+
 <div id="storeScreen" class="store-screen">
   <div class="top-bar-controls" style="margin-top: 5px;">
     <button type="button" class="lang-switcher" onclick="toggleLanguage()">🌐 <span id="langText2">English</span></button>
   </div>
 
-  <!-- القسم الأول: الرئيسية وعروض الشحن -->
   <div id="sec-home" class="app-section active-section">
     <div class="welcome-banner">
       <h2 data-i18n="storeWelcome">🎉 أهلاً بك في متجر EFBL STORE العظمة!</h2>
@@ -572,10 +573,7 @@ input:focus, textarea:focus {
         <button type="button" class="cart-btn" onclick="togglePackage('15,000 كوين (1100 د.ل)', 1100, 'card-15000')" data-i18n="addCart">إضافة إلى السلة 🛒</button>
       </div>
     </div>
-  </div>
-
-  <!-- القسم الثاني: السلة وإتمام الطلب -->
-  <div id="sec-cart" class="app-section">
+      <div id="sec-cart" class="app-section">
     <div class="section-header" data-i18n="cartTitleHeader">🛒 سلة المشتريات والطلبات</div>
     <div class="cart-summary-box">
       <ul id="cartItemsList" class="cart-items-list">
@@ -600,7 +598,6 @@ input:focus, textarea:focus {
     </div>
   </div>
 
-  <!-- القسم الثالث: الدعم الفني -->
   <div id="sec-support" class="app-section">
     <div class="section-header" data-i18n="supportHeader">💬 فريق الدعم الفني</div>
     <div class="support-card-box">
@@ -619,7 +616,6 @@ input:focus, textarea:focus {
     </div>
   </div>
 
-  <!-- القسم الرابع: حسابي -->
   <div id="sec-profile" class="app-section">
     <div class="section-header" data-i18n="profileHeader">👤 حسابي الشخصي</div>
     <div class="support-card-box" style="text-align:right;padding:20px;">
@@ -630,160 +626,224 @@ input:focus, textarea:focus {
   </div>
 </div>
 
-<!-- شريط التنقل السفلي -->
 <nav class="bottom-nav" id="bottomNavContainer" style="display:none;">
   <button type="button" class="nav-item active" onclick="switchSection('home', this)">
-    <span class="icon">⚡</span>
-    <span data-i18n="navHome">الرئيسية</span>
+    <span class="icon">⚡</span><span data-i18n="navHome">الرئيسية</span>
   </button>
   <button type="button" class="nav-item" onclick="switchSection('cart', this)">
-    <span class="icon">🛒</span>
-    <span data-i18n="navCart">السلة</span>
+    <span class="icon">🛒</span><span data-i18n="navCart">السلة</span>
   </button>
   <button type="button" class="nav-item" onclick="switchSection('support', this)">
-    <span class="icon">💬</span>
-    <span data-i18n="navSupport">الدعم</span>
+    <span class="icon">💬</span><span data-i18n="navSupport">الدعم</span>
   </button>
   <button type="button" class="nav-item" onclick="switchSection('profile', this)">
-    <span class="icon">👤</span>
-    <span data-i18n="navProfile">حسابي</span>
+    <span class="icon">👤</span><span data-i18n="navProfile">حسابي</span>
   </button>
 </nav>
 
+<!-- مكتبات Firebase -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
 <script>
+/* إعداد Firebase الخاص بمشروع EFBL */
+const firebaseConfig = {
+  apiKey: "AIzaSyAoC5jxFFE1IqDzXhl9bTccdRbAPqCdKqc",
+  authDomain: "efbl-store.firebaseapp.com",
+  projectId: "efbl-store",
+  storageBucket: "efbl-store.firebasestorage.app",
+  messagingSenderId: "842635934940",
+  appId: "1:842635934940:web:44b5fa10ae393888128819",
+  measurementId: "G-DS09EYEMYN"
+};
+
+firebase.initializeApp(firebaseConfig);
+
+const auth = firebase.auth();
+const db = firebase.firestore();
+
 var currentMode = 'old';
 var generatedCode = '';
-var cartItems = []; // مصفوفة تحمل العناصر مع أسعارها
+var cartItems = [];
 var tempEmail = '';
 var tempPass = '';
 var currentLang = 'ar';
+var currentUser = null;
+var authBusy = false;
 
 var translations = {
   ar: {
-    splashSub: "أقوى متجر كوينز وعروض بيس في ليبيا",
-    codeLabel: "كود التحقق (6 أرقام):",
-    codeNote: "سيختفي هذا الإشعار خلال 15 ثانية!",
-    vipTitle: "أهلاً بك في أفضل كلان داخل ليبيا",
-    authTitle: "بوابة دخول المتجر",
-    oldAcc: "لدي حساب قديم",
-    newAcc: "إنشاء حساب جديد",
-    oldSub: "أدخل بريدك وكلمة السر لتسجيل الدخول بحسابك القديم",
-    newSub: "أدخل بريدك وكلمة السر الجديدة لإنشاء حساب جديد",
-    loginBtn: "تسجيل الدخول",
-    verifyTitle: "تأكيد كود الحساب الجديد",
-    verifySub: "اكتب كود الـ 6 أرقام الذي ظهر أعلى الشاشة:",
-    confirmBtn: "تأكيد وإنشاء الحساب",
-    resendBtn: "🔄 إعادة إرسال الكود",
-    storeWelcome: "🎉 أهلاً بك في متجر EFBL STORE العظمة!",
-    storeSub: "سرعة في التسليم، وأفضل أسعار كوينز وعروض بيس في ليبيا.",
-    paymentHeader: "💳 طرق الدفع المتاحة",
-    pay1: "1️⃣ كروت تعبئة ليبيانا.",
-    pay2: "تحويل مصرفي (⭐ الأفضل والأسعار أقل!).",
-    offersHeader: "🎁 عروض اللاعبين والمكافآت",
-    suarezTitle: "سواريز",
-    casillasTitle: "كاسياس",
-    coinsHeader: "🪙 شحن كوينز إي فوتبول",
-    addCart: "إضافة إلى السلة 🛒",
-    removeCart: "إزالة ❌",
-    cartTitleHeader: "🛒 سلة المشتريات والطلبات",
-    emptyCart: "السلة فارغة حالياً.. اختر باقاتك من الرئيسية.",
-    totalPrice: "المجموع الإجمالي: ",
-    selectPayMethod: "اختر طريقة الدفع:",
-    libyanaPay: "كروت تعبئة ليبيانا",
-    bankPay: "تحويل مصرفي (⭐ الأسعار أقل وأوفر!)",
-    sendOrderHeader: "📩 إرسال الطلب النهائي",
-    sendOrderSub: "اختر الطريقة للإرسال للإدارة:",
-    waBtn: "💬 إرسال الطلب عبر الواتساب",
-    tgBtn: "✈️ إرسال الطلب عبر التليجرام",
-    supportHeader: "💬 فريق الدعم الفني",
-    supportOnline: "متواجدون لخدمتك على مدار الساعة 🟢",
-    supportFormTitle: "أرسل مشكلتك أو استفسارك",
-    supportPlaceholder: "اكتب مشكلتك، فكرتك أو استفسارك هنا بكل تفصيل...",
-    supportSendBtn: "إرسال للدعم عبر الواتساب 🚀",
-    profileHeader: "👤 حسابي الشخصي",
-    loggedEmail: "البريد المسجل:",
-    accStatus: "حالة الحساب:",
-    vipActive: "نشط ومرخص VIP ⭐",
-    logoutBtn: "تسجيل الخروج 🚪",
-    navHome: "الرئيسية",
-    navCart: "السلة",
-    navSupport: "الدعم",
-    navProfile: "حسابي"
+    splashSub:"أقوى متجر كوينز وعروض بيس في ليبيا",
+    codeLabel:"كود التحقق (6 أرقام):",
+    codeNote:"سيختفي هذا الإشعار خلال 15 ثانية!",
+    vipTitle:"أهلاً بك في أفضل كلان داخل ليبيا",
+    authTitle:"بوابة دخول المتجر",
+    oldAcc:"لدي حساب قديم",
+    newAcc:"إنشاء حساب جديد",
+    oldSub:"أدخل بريدك وكلمة السر لتسجيل الدخول بحسابك القديم",
+    newSub:"أدخل بريدك وكلمة السر الجديدة لإنشاء حساب جديد",
+    loginBtn:"تسجيل الدخول",
+    verifyTitle:"تأكيد كود الحساب الجديد",
+    verifySub:"اكتب كود الـ 6 أرقام الذي ظهر أعلى الشاشة:",
+    confirmBtn:"تأكيد وإنشاء الحساب",
+    resendBtn:"🔄 إعادة إرسال الكود",
+    storeWelcome:"🎉 أهلاً بك في متجر EFBL STORE العظمة!",
+    storeSub:"سرعة في التسليم، وأفضل أسعار كوينز وعروض بيس في ليبيا.",
+    paymentHeader:"💳 طرق الدفع المتاحة",
+    pay1:"1️⃣ كروت تعبئة ليبيانا.",
+    pay2:"تحويل مصرفي (⭐ الأفضل والأسعار أقل!).",
+    offersHeader:"🎁 عروض اللاعبين والمكافآت",
+    suarezTitle:"سواريز",
+    casillasTitle:"كاسياس",
+    coinsHeader:"🪙 شحن كوينز إي فوتبول",
+    addCart:"إضافة إلى السلة 🛒",
+    removeCart:"إزالة ❌",
+    cartTitleHeader:"🛒 سلة المشتريات والطلبات",
+    emptyCart:"السلة فارغة حالياً.. اختر باقاتك من الرئيسية.",
+    totalPrice:"المجموع الإجمالي: ",
+    selectPayMethod:"اختر طريقة الدفع:",
+    libyanaPay:"كروت تعبئة ليبيانا",
+    bankPay:"تحويل مصرفي (⭐ الأسعار أقل وأوفر!)",
+    sendOrderHeader:"📩 إرسال الطلب النهائي",
+    sendOrderSub:"اختر الطريقة للإرسال للإدارة:",
+    waBtn:"💬 إرسال الطلب عبر الواتساب",
+    tgBtn:"✈️ إرسال الطلب عبر التليجرام",
+    supportHeader:"💬 فريق الدعم الفني",
+    supportOnline:"متواجدون لخدمتك على مدار الساعة 🟢",
+    supportFormTitle:"أرسل مشكلتك أو استفسارك",
+    supportPlaceholder:"اكتب مشكلتك، فكرتك أو استفسارك هنا بكل تفصيل...",
+    supportSendBtn:"إرسال للدعم عبر الواتساب 🚀",
+    profileHeader:"👤 حسابي الشخصي",
+    loggedEmail:"البريد المسجل:",
+    accStatus:"حالة الحساب:",
+    vipActive:"نشط ومرخص VIP ⭐",
+    logoutBtn:"تسجيل الخروج 🚪",
+    navHome:"الرئيسية",
+    navCart:"السلة",
+    navSupport:"الدعم",
+    navProfile:"حسابي"
   },
   en: {
-    splashSub: "The ultimate eFootball coins & offers store in Libya",
-    codeLabel: "Verification Code (6 digits):",
-    codeNote: "This notification will disappear in 15 seconds!",
-    vipTitle: "Welcome to the best clan in Libya",
-    authTitle: "Store Login Gateway",
-    oldAcc: "I have an account",
-    newAcc: "Create new account",
-    oldSub: "Enter your email & password to login to your existing account",
-    newSub: "Enter your email & new password to create a new account",
-    loginBtn: "Login",
-    verifyTitle: "Confirm New Account Code",
-    verifySub: "Type the 6-digit code shown at the top of the screen:",
-    confirmBtn: "Confirm & Register",
-    resendBtn: "🔄 Resend Code",
-    storeWelcome: "🎉 Welcome to EFBL STORE!",
-    storeSub: "Lightning-fast delivery & best eFootball prices in Libya.",
-    paymentHeader: "💳 Available Payment Methods",
-    pay1: "1️⃣ Libyana recharge cards.",
-    pay2: "Bank Transfer (⭐ Best choice & lower prices!).",
-    offersHeader: "🎁 Players & Rewards Offers",
-    suarezTitle: "Suarez",
-    casillasTitle: "Casillas",
-    coinsHeader: "🪙 eFootball Coins Top-Up",
-    addCart: "Add to Cart 🛒",
-    removeCart: "Remove ❌",
-    cartTitleHeader: "🛒 Shopping Cart & Orders",
-    emptyCart: "Cart is empty.. Choose your packages from Home.",
-    totalPrice: "Total Price: ",
-    selectPayMethod: "Select Payment Method:",
-    libyanaPay: "Libyana Cards",
-    bankPay: "Bank Transfer (⭐ Cheaper & Best!)",
-    sendOrderHeader: "📩 Send Final Order",
-    sendOrderSub: "Choose method to send to admin:",
-    waBtn: "💬 Send Order via WhatsApp",
-    tgBtn: "✈️ Send Order via Telegram",
-    supportHeader: "💬 Technical Support",
-    supportOnline: "Available 24/7 to serve you 🟢",
-    supportFormTitle: "Send Your Issue or Inquiry",
-    supportPlaceholder: "Write your problem, idea or inquiry here in detail...",
-    supportSendBtn: "Send to Support via WhatsApp 🚀",
-    profileHeader: "👤 My Profile",
-    loggedEmail: "Registered Email:",
-    accStatus: "Account Status:",
-    vipActive: "Active VIP & Verified ⭐",
-    logoutBtn: "Logout 🚪",
-    navHome: "Home",
-    navCart: "Cart",
-    navSupport: "Support",
-    navProfile: "Profile"
+    splashSub:"The ultimate eFootball coins & offers store in Libya",
+    codeLabel:"Verification Code (6 digits):",
+    codeNote:"This notification will disappear in 15 seconds!",
+    vipTitle:"Welcome to the best clan in Libya",
+    authTitle:"Store Login Gateway",
+    oldAcc:"I have an account",
+    newAcc:"Create new account",
+    oldSub:"Enter your email & password to login to your existing account",
+    newSub:"Enter your email & new password to create a new account",
+    loginBtn:"Login",
+    verifyTitle:"Confirm New Account Code",
+    verifySub:"Type the 6-digit code shown at the top of the screen:",
+    confirmBtn:"Confirm & Register",
+    resendBtn:"🔄 Resend Code",
+    storeWelcome:"🎉 Welcome to EFBL STORE!",
+    storeSub:"Lightning-fast delivery & best eFootball prices in Libya.",
+    paymentHeader:"💳 Available Payment Methods",
+    pay1:"1️⃣ Libyana recharge cards.",
+    pay2:"Bank Transfer (⭐ Best choice & lower prices!).",
+    offersHeader:"🎁 Players & Rewards Offers",
+    suarezTitle:"Suarez",
+    casillasTitle:"Casillas",
+    coinsHeader:"🪙 eFootball Coins Top-Up",
+    addCart:"Add to Cart 🛒",
+    removeCart:"Remove ❌",
+    cartTitleHeader:"🛒 Shopping Cart & Orders",
+    emptyCart:"Cart is empty.. Choose your packages from Home.",
+    totalPrice:"Total Price: ",
+    selectPayMethod:"Select Payment Method:",
+    libyanaPay:"Libyana Cards",
+    bankPay:"Bank Transfer (⭐ Cheaper & Best!)",
+    sendOrderHeader:"📩 Send Final Order",
+    sendOrderSub:"Choose method to send to admin:",
+    waBtn:"💬 Send Order via WhatsApp",
+    tgBtn:"✈️ Send Order via Telegram",
+    supportHeader:"💬 Technical Support",
+    supportOnline:"Available 24/7 to serve you 🟢",
+    supportFormTitle:"Send Your Issue or Inquiry",
+    supportPlaceholder:"Write your problem, idea or inquiry here in detail...",
+    supportSendBtn:"Send to Support via WhatsApp 🚀",
+    profileHeader:"👤 My Profile",
+    loggedEmail:"Registered Email:",
+    accStatus:"Account Status:",
+    vipActive:"Active VIP & Verified ⭐",
+    logoutBtn:"Logout 🚪",
+    navHome:"Home",
+    navCart:"Cart",
+    navSupport:"Support",
+    navProfile:"Profile"
   }
 };
 
+function showStatus(message, success) {
+  var status = document.getElementById('emailStatus');
+  status.style.display = 'block';
+  status.style.color = success ? '#38ef7d' : '#ff5555';
+  status.innerText = message;
+}
+
+function friendlyAuthError(error) {
+  var code = error && error.code ? error.code : '';
+  var ar = {
+    'auth/email-already-in-use':'هذا البريد مسجل من قبل. سجّل الدخول.',
+    'auth/invalid-email':'البريد الإلكتروني غير صحيح.',
+    'auth/weak-password':'كلمة السر ضعيفة. استخدم 6 أحرف على الأقل.',
+    'auth/user-not-found':'لا يوجد حساب بهذا البريد.',
+    'auth/wrong-password':'كلمة السر غير صحيحة.',
+    'auth/invalid-credential':'البريد أو كلمة السر غير صحيحة.',
+    'auth/too-many-requests':'محاولات كثيرة. حاول لاحقاً.',
+    'auth/network-request-failed':'تعذر الاتصال. تحقق من الإنترنت.',
+    'permission-denied':'قواعد قاعدة البيانات لا تسمح بهذه العملية.'
+  };
+  var en = {
+    'auth/email-already-in-use':'This email is already registered.',
+    'auth/invalid-email':'Invalid email address.',
+    'auth/weak-password':'Password must be at least 6 characters.',
+    'auth/user-not-found':'No account found for this email.',
+    'auth/wrong-password':'Incorrect password.',
+    'auth/invalid-credential':'Incorrect email or password.',
+    'auth/too-many-requests':'Too many attempts. Try again later.',
+    'auth/network-request-failed':'Network error. Check your connection.',
+    'permission-denied':'Database rules do not allow this operation.'
+  };
+  return (currentLang === 'ar' ? ar[code] : en[code]) ||
+    (currentLang === 'ar' ? 'حدث خطأ: ' : 'An error occurred: ') +
+    (error && error.message ? error.message : 'Unknown error');
+}
+
 function toggleLanguage() {
-  currentLang = (currentLang === 'ar') ? 'en' : 'ar';
+  currentLang = currentLang === 'ar' ? 'en' : 'ar';
   var root = document.getElementById('htmlRoot');
   root.setAttribute('lang', currentLang);
-  root.setAttribute('dir', (currentLang === 'ar') ? 'rtl' : 'ltr');
+  root.setAttribute('dir', currentLang === 'ar' ? 'rtl' : 'ltr');
 
-  document.getElementById('langText').innerText = (currentLang === 'ar') ? 'English' : 'عربي';
-  document.getElementById('langText2').innerText = (currentLang === 'ar') ? 'English' : 'عربي';
+  document.getElementById('langText').innerText = currentLang === 'ar' ? 'English' : 'عربي';
+  document.getElementById('langText2').innerText = currentLang === 'ar' ? 'English' : 'عربي';
 
-  var elements = document.querySelectorAll('[data-i18n]');
-  elements.forEach(function(el) {
+  document.querySelectorAll('[data-i18n]').forEach(function(el) {
     var key = el.getAttribute('data-i18n');
-    if (translations[currentLang][key]) {
-      el.innerText = translations[currentLang][key];
-    }
+    if (translations[currentLang][key]) el.innerText = translations[currentLang][key];
   });
 
   var supportInput = document.getElementById('supportMsgInput');
-  if (supportInput) {
-    supportInput.placeholder = (currentLang === 'ar') ? "اكتب مشكلتك، فكرتك أو استفسارك هنا بكل تفصيل..." : "Write your problem, idea or inquiry here in detail...";
-  }
+  if (supportInput) supportInput.placeholder = translations[currentLang].supportPlaceholder;
+
+  var emailInput = document.getElementById('userEmail');
+  var passInput = document.getElementById('userPass');
+  var codeInput = document.getElementById('enteredCode');
+  if (emailInput) emailInput.placeholder = currentLang === 'ar' ? 'البريد الإلكتروني (مثال: user@gmail.com)' : 'Email address';
+  if (passInput) passInput.placeholder = currentLang === 'ar' ? 'كلمة السر' : 'Password';
+  if (codeInput) codeInput.placeholder = currentLang === 'ar' ? 'أدخل الكود المكون من 6 أرقام' : 'Enter the 6-digit code';
+
+  var subtitle = document.getElementById('authSubtitle');
+  if (subtitle) subtitle.innerText = translations[currentLang][currentMode === 'old' ? 'oldSub' : 'newSub'];
+
+  var mainBtn = document.getElementById('authMainBtn');
+  if (mainBtn) mainBtn.innerText = translations[currentLang][currentMode === 'old' ? 'loginBtn' : 'newAcc'];
+
+  updateCartDisplay();
 }
 
 function hideSplash() {
@@ -795,135 +855,367 @@ function hideSplash() {
   }
 }
 
-window.addEventListener('load', function() {
-  setTimeout(hideSplash, 2500);
-
-  var savedUser = localStorage.getItem('efbl_logged_user');
-  if (savedUser) {
-    document.getElementById('authContainer').style.display = 'none';
-    document.getElementById('storeScreen').style.display = 'block';
-    document.getElementById('bottomNavContainer').style.display = 'flex';
-    document.getElementById('profileEmailVal').innerText = savedUser;
-    showVipWelcome();
-  }
-});
-
-setTimeout(hideSplash, 6000);
-
 function showVipWelcome() {
   var toast = document.getElementById('vipWelcomeToast');
   if (!toast) return;
-
   toast.style.display = 'block';
-  setTimeout(function() {
-    toast.style.display = 'none';
-  }, 4000);
+  setTimeout(function() { toast.style.display = 'none'; }, 4000);
 }
+
+function showStore(user) {
+  currentUser = user;
+  document.getElementById('authContainer').style.display = 'none';
+  document.getElementById('storeScreen').style.display = 'block';
+  document.getElementById('bottomNavContainer').style.display = 'flex';
+  document.getElementById('profileEmailVal').innerText = user.email || '';
+  loadCart();
+  updateCartDisplay();
+}
+
+function showAuth() {
+  currentUser = null;
+  document.getElementById('authContainer').style.display = 'block';
+  document.getElementById('storeScreen').style.display = 'none';
+  document.getElementById('bottomNavContainer').style.display = 'none';
+}
+
+window.addEventListener('load', function() {
+  setTimeout(hideSplash, 2500);
+});
+setTimeout(hideSplash, 6000);
+
+auth.onAuthStateChanged(function(user) {
+  if (user) {
+    showStore(user);
+  } else {
+    showAuth();
+  }
+});
 
 function switchMode(mode) {
   currentMode = mode;
-  var btnOld = document.getElementById('btnModeOld');
-  var btnNew = document.getElementById('btnModeNew');
-  var subtitle = document.getElementById('authSubtitle');
-  var mainBtn = document.getElementById('authMainBtn');
-
+  document.getElementById('btnModeOld').className = mode === 'old' ? 'mode-btn active' : 'mode-btn';
+  document.getElementById('btnModeNew').className = mode === 'new' ? 'mode-btn active' : 'mode-btn';
   document.getElementById('step1').style.display = 'block';
   document.getElementById('step2').style.display = 'none';
   document.getElementById('emailStatus').style.display = 'none';
-
-  if (mode === 'old') {
-    btnOld.className = 'mode-btn active';
-    btnNew.className = 'mode-btn';
-    subtitle.innerText = translations[currentLang].oldSub;
-    mainBtn.innerText = translations[currentLang].loginBtn;
-  } else {
-    btnNew.className = 'mode-btn active';
-    btnOld.className = 'mode-btn';
-    subtitle.innerText = translations[currentLang].newSub;
-    mainBtn.innerText = translations[currentLang].newAcc;
-  }
+  document.getElementById('authSubtitle').innerText = translations[currentLang][mode === 'old' ? 'oldSub' : 'newSub'];
+  document.getElementById('authMainBtn').innerText = translations[currentLang][mode === 'old' ? 'loginBtn' : 'newAcc'];
 }
 
-function handleAuthAction() {
+async function handleAuthAction() {
+  if (authBusy) return;
+
   var emailInput = document.getElementById('userEmail');
   var passInput = document.getElementById('userPass');
-  var statusDiv = document.getElementById('emailStatus');
   var email = emailInput.value.trim().toLowerCase();
   var pass = passInput.value;
 
-  statusDiv.style.display = 'block';
-
   if (!emailInput.checkValidity() || email.length < 5) {
-    statusDiv.style.color = '#ff5555';
-    statusDiv.innerText = (currentLang === 'ar') ? '❌ أدخل بريدًا إلكترونيًا صحيحًا.' : '❌ Enter a valid email.';
+    showStatus(currentLang === 'ar' ? '❌ أدخل بريدًا إلكترونيًا صحيحًا.' : '❌ Enter a valid email.', false);
+    return;
+  }
+  if (pass.length < 6) {
+    showStatus(currentLang === 'ar' ? '❌ كلمة السر يجب أن تكون 6 أحرف على الأقل.' : '❌ Password must be at least 6 characters.', false);
     return;
   }
 
-  if (pass.length < 4) {
-    statusDiv.style.color = '#ff5555';
-    statusDiv.innerText = (currentLang === 'ar') ? '❌ كلمة السر قصيرة جدًا.' : '❌ Password too short.';
-    return;
-  }
+  authBusy = true;
+  var button = document.getElementById('authMainBtn');
+  button.disabled = true;
 
-  if (currentMode === 'old') {
-    var savedPass = localStorage.getItem('pass_' + email);
-    if (savedPass && savedPass === pass) {
-      localStorage.setItem('efbl_logged_user', email);
-      statusDiv.style.color = '#38ef7d';
-      statusDiv.innerText = (currentLang === 'ar') ? '✅ تم تسجيل الدخول!' : '✅ Logged in successfully!';
-
-      setTimeout(function() {
-        document.getElementById('authContainer').style.display = 'none';
-        document.getElementById('storeScreen').style.display = 'block';
-        document.getElementById('bottomNavContainer').style.display = 'flex';
-        document.getElementById('profileEmailVal').innerText = email;
-        showVipWelcome();
-      }, 500);
+  try {
+    if (currentMode === 'old') {
+      await auth.signInWithEmailAndPassword(email, pass);
+      showStatus(currentLang === 'ar' ? '✅ تم تسجيل الدخول!' : '✅ Logged in successfully!', true);
     } else {
-      statusDiv.style.color = '#ff5555';
-      statusDiv.innerText = (currentLang === 'ar') ? '❌ الحساب غير موجود أو كلمة السر غير صحيحة.' : '❌ Account not found or incorrect password.';
+      tempEmail = email;
+      tempPass = pass;
+      generateNewCode();
+      showStatus(currentLang === 'ar' ? '✅ ظهر كود التجربة أعلى الصفحة.' : '✅ Demo code shown at the top.', true);
+      document.getElementById('step1').style.display = 'none';
+      document.getElementById('step2').style.display = 'block';
     }
-    return;
+  } catch (error) {
+    showStatus(friendlyAuthError(error), false);
+  } finally {
+    authBusy = false;
+    button.disabled = false;
   }
-
-  if (localStorage.getItem('pass_' + email)) {
-    statusDiv.style.color = '#ff5555';
-    statusDiv.innerText = (currentLang === 'ar') ? '⚠️ البريد مسجل من قبل. اختر تسجيل الدخول.' : '⚠️ Email already registered. Please login.';
-    return;
-  }
-
-  tempEmail = email;
-  tempPass = pass;
-  generateNewCode();
-
-  statusDiv.style.color = '#38ef7d';
-  statusDiv.innerText = (currentLang === 'ar') ? '✅ ظهر كود التجربة أعلى الصفحة.' : '✅ Verification code shown at the top.';
-
-  document.getElementById('step1').style.display = 'none';
-  document.getElementById('step2').style.display = 'block';
 }
 
 function generateNewCode() {
   generatedCode = String(Math.floor(100000 + Math.random() * 900000));
-  var notification = document.getElementById('topNotification');
   document.getElementById('generatedCodeDisplay').innerText = generatedCode;
+  var notification = document.getElementById('topNotification');
   notification.style.display = 'block';
 
-  setTimeout(function() {
+  clearTimeout(window.efblCodeTimer);
+  window.efblCodeTimer = setTimeout(function() {
     notification.style.display = 'none';
   }, 15000);
 }
 
 function resendCode() {
   generateNewCode();
-  alert((currentLang === 'ar') ? 'ظهر كود جديد أعلى الصفحة.' : 'A new code has appeared at the top.');
+  alert(currentLang === 'ar' ? 'ظهر كود جديد أعلى الصفحة.' : 'A new code has appeared at the top.');
 }
 
-function verifyCode() {
+async function verifyCode() {
+  if (authBusy) return;
   var inputCode = document.getElementById('enteredCode').value.trim();
 
-  if (inputCode === generatedCode && tempEmail !== '' && tempPass !== '') {
-    localStorage.setItem('pass_' + tempEmail, tempPass);
-    localStorage.setItem('efbl_logged_user', tempEmail);
+  if (inputCode !== generatedCode || !tempEmail || !tempPass) {
+    alert(currentLang === 'ar' ? '❌ الكود غير صحيح. تأكد من الأرقام الستة.' : '❌ Invalid code. Check the 6 digits.');
+    return;
+  }
 
-    document.ge
+  authBusy = true;
+  var confirmButton = document.querySelector('#step2 .btn');
+  confirmButton.disabled = true;
+
+  try {
+    var credential = await auth.createUserWithEmailAndPassword(tempEmail, tempPass);
+    var user = credential.user;
+
+    await db.collection('users').doc(user.uid).set({
+      email: user.email,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+      accountStatus: 'active'
+    });
+
+    document.getElementById('topNotification').style.display = 'none';
+    tempEmail = '';
+    tempPass = '';
+    generatedCode = '';
+    document.getElementById('enteredCode').value = '';
+    showStore(user);
+    showVipWelcome();
+  } catch (error) {
+    showStatus(friendlyAuthError(error), false);
+    document.getElementById('step2').style.display = 'block';
+  } finally {
+    authBusy = false;
+    confirmButton.disabled = false;
+  }
+}
+function getCartStorageKey() {
+  return currentUser ? 'efbl_cart_' + currentUser.uid : 'efbl_cart_guest';
+}
+
+function saveCart() {
+  try {
+    localStorage.setItem(getCartStorageKey(), JSON.stringify(cartItems));
+  } catch (error) {
+    console.warn('تعذر حفظ السلة محلياً:', error);
+  }
+
+  if (currentUser) {
+    db.collection('users').doc(currentUser.uid).set({
+      cartItems: cartItems,
+      cartUpdatedAt: firebase.firestore.FieldValue.serverTimestamp()
+    }, { merge: true }).catch(function(error) {
+      console.warn('تعذر مزامنة السلة:', error);
+    });
+  }
+}
+
+async function loadCart() {
+  if (!currentUser) return;
+
+  try {
+    var saved = await db.collection('users').doc(currentUser.uid).get();
+
+    if (saved.exists && Array.isArray(saved.data().cartItems)) {
+      cartItems = saved.data().cartItems;
+    } else {
+      var localCart = localStorage.getItem(getCartStorageKey());
+      cartItems = localCart ? JSON.parse(localCart) : [];
+    }
+  } catch (error) {
+    console.warn('تعذر تحميل السلة من قاعدة البيانات:', error);
+    var fallback = localStorage.getItem(getCartStorageKey());
+    cartItems = fallback ? JSON.parse(fallback) : [];
+  }
+
+  restoreSelectedCards();
+  updateCartDisplay();
+}
+
+function restoreSelectedCards() {
+  document.querySelectorAll('.card').forEach(function(card) {
+    card.classList.remove('selected');
+    var button = card.querySelector('.cart-btn');
+    if (button) button.innerText = translations[currentLang].addCart;
+  });
+
+  cartItems.forEach(function(item) {
+    var card = document.getElementById(item.cardId);
+    if (card) {
+      card.classList.add('selected');
+      var button = card.querySelector('.cart-btn');
+      if (button) button.innerText = currentLang === 'ar' ? 'تمت الإضافة ✅' : 'Added ✅';
+    }
+  });
+}
+
+function togglePackage(pkgName, pkgPrice, cardId) {
+  var cardElement = document.getElementById(cardId);
+  if (!cardElement) return;
+
+  var btnElement = cardElement.querySelector('.cart-btn');
+  var existingIndex = cartItems.findIndex(function(item) {
+    return item.cardId === cardId;
+  });
+
+  if (existingIndex === -1) {
+    cartItems.push({ name: pkgName, price: pkgPrice, cardId: cardId });
+    cardElement.classList.add('selected');
+    btnElement.innerText = currentLang === 'ar' ? 'تمت الإضافة ✅' : 'Added ✅';
+  } else {
+    cartItems.splice(existingIndex, 1);
+    cardElement.classList.remove('selected');
+    btnElement.innerText = translations[currentLang].addCart;
+  }
+
+  saveCart();
+  updateCartDisplay();
+}
+
+function updateCartDisplay() {
+  var listContainer = document.getElementById('cartItemsList');
+  var totalPriceDisplay = document.getElementById('totalPriceDisplay');
+  if (!listContainer || !totalPriceDisplay) return;
+
+  if (cartItems.length === 0) {
+    listContainer.innerHTML = '<li style="color:#a0aec0;text-align:center;"></li>';
+    listContainer.firstElementChild.textContent = translations[currentLang].emptyCart;
+    totalPriceDisplay.innerText = translations[currentLang].totalPrice + '0 ' + (currentLang === 'ar' ? 'د.ل' : 'LYD');
+    return;
+  }
+
+  listContainer.innerHTML = '';
+  var totalSum = 0;
+
+  cartItems.forEach(function(item, idx) {
+    totalSum += Number(item.price) || 0;
+
+    var li = document.createElement('li');
+    var nameSpan = document.createElement('span');
+    nameSpan.textContent = item.name;
+
+    var removeButton = document.createElement('button');
+    removeButton.type = 'button';
+    removeButton.textContent = translations[currentLang].removeCart;
+    removeButton.style.cssText = 'background:none;border:none;color:#ff5555;cursor:pointer;font-weight:bold;';
+    removeButton.addEventListener('click', function() {
+      removeCartItem(item.cardId);
+    });
+
+    li.appendChild(nameSpan);
+    li.appendChild(removeButton);
+    listContainer.appendChild(li);
+  });
+
+  totalPriceDisplay.innerText =
+    translations[currentLang].totalPrice + totalSum + ' ' +
+    (currentLang === 'ar' ? 'د.ل' : 'LYD');
+}
+
+function removeCartItem(cardId) {
+  cartItems = cartItems.filter(function(item) {
+    return item.cardId !== cardId;
+  });
+
+  var cardElement = document.getElementById(cardId);
+  if (cardElement) {
+    cardElement.classList.remove('selected');
+    var btn = cardElement.querySelector('.cart-btn');
+    if (btn) btn.innerText = translations[currentLang].addCart;
+  }
+
+  saveCart();
+  updateCartDisplay();
+}
+
+function switchSection(sectionId, btnElement) {
+  document.querySelectorAll('.app-section').forEach(function(sec) {
+    sec.classList.remove('active-section');
+  });
+
+  var targetSec = document.getElementById('sec-' + sectionId);
+  if (targetSec) targetSec.classList.add('active-section');
+
+  document.querySelectorAll('.nav-item').forEach(function(nav) {
+    nav.classList.remove('active');
+  });
+
+  if (btnElement) btnElement.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function sendOrder(platform) {
+  if (cartItems.length === 0) {
+    alert(currentLang === 'ar' ? 'اختر باقة واحدة على الأقل أولًا!' : 'Select at least one package first!');
+    return;
+  }
+
+  var selectedPay = document.querySelector('input[name="payMethod"]:checked').value;
+  var payText = selectedPay === 'bank'
+    ? (currentLang === 'ar' ? 'تحويل مصرفي (وفراً وأقل سعراً)' : 'Bank Transfer')
+    : (currentLang === 'ar' ? 'كروت ليبيانا' : 'Libyana Cards');
+
+  var pkgNames = cartItems.map(function(item) {
+    return item.name;
+  }).join('\n- ');
+
+  var totalSum = cartItems.reduce(function(sum, item) {
+    return sum + (Number(item.price) || 0);
+  }, 0);
+
+  var msg = currentLang === 'ar'
+    ? 'مرحبًا إدارة EFBL STORE، أريـد طلب الباقات التالية:\n- ' +
+      pkgNames + '\n💰 المجموع الإجمالي: ' + totalSum +
+      ' د.ل\n💳 طريقة الدفع: ' + payText
+    : 'Hello EFBL STORE, I want to order:\n- ' +
+      pkgNames + '\n💰 Total: ' + totalSum +
+      ' LYD\n💳 Payment: ' + payText;
+
+  if (platform === 'whatsapp') {
+    window.open('https://wa.me/218943437286?text=' + encodeURIComponent(msg), '_blank');
+  } else if (platform === 'telegram') {
+    window.open('https://t.me/mo_om_oi?text=' + encodeURIComponent(msg), '_blank');
+  }
+}
+
+function sendSupportMessage() {
+  var msgInput = document.getElementById('supportMsgInput');
+  var txt = msgInput.value.trim();
+
+  if (txt.length < 3) {
+    alert(currentLang === 'ar'
+      ? 'الرجاء كتابة تفاصيل الاستفسار أو المشكلة أولاً.'
+      : 'Please write your inquiry or problem details first.');
+    return;
+  }
+
+  var supportMsg = currentLang === 'ar'
+    ? 'السلام عليكم فريق دعم EFBL، لدي الاستفسار التالي:\n\n' + txt
+    : 'Hello EFBL Support, I have this inquiry:\n\n' + txt;
+
+  window.open('https://wa.me/218943437286?text=' + encodeURIComponent(supportMsg), '_blank');
+}
+
+async function logoutUser() {
+  try {
+    await auth.signOut();
+    cartItems = [];
+    showAuth();
+    switchMode('old');
+  } catch (error) {
+    alert(friendlyAuthError(error));
+  }
+}
+</script>
+</body>
+</html>                                                                                                                                                                          </div>
