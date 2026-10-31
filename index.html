@@ -500,6 +500,7 @@ input:focus, textarea:focus {
     <button type="button" class="btn resend-btn" onclick="resendCode()" data-i18n="resendBtn">🔄 إعادة إرسال الكود</button>
   </div>
 </div>
+
 <div id="storeScreen" class="store-screen">
   <div class="top-bar-controls" style="margin-top: 5px;">
     <button type="button" class="lang-switcher" onclick="toggleLanguage()">🌐 <span id="langText2">English</span></button>
@@ -602,8 +603,7 @@ input:focus, textarea:focus {
       </div>
     </div>
   </div>
-
-  <div id="sec-cart" class="app-section">
+   <div id="sec-cart" class="app-section">
     <div class="section-header" data-i18n="cartTitleHeader">🛒 سلة المشتريات والطلبات</div>
     <div class="cart-summary-box">
       <ul id="cartItemsList" class="cart-items-list">
@@ -671,10 +671,9 @@ input:focus, textarea:focus {
   </button>
 </nav>
 
-<!-- مكتبات Firebase -->
+<!-- مكتبات Firebase: تم حذف مكتبة قاعدة البيانات -->
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 
 <script>
 /* إعداد Firebase الخاص بمشروع EFBL */
@@ -691,7 +690,6 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 
 const auth = firebase.auth();
-const db = firebase.firestore();
 
 var currentMode = 'old';
 var generatedCode = '';
@@ -806,7 +804,7 @@ var translations = {
     navProfile:"Profile"
   }
 };
-function showStatus(message, success) {
+ function showStatus(message, success) {
   var step2 = document.getElementById('step2');
   var isVerifying = step2 && step2.style.display !== 'none';
 
@@ -832,8 +830,7 @@ function friendlyAuthError(error) {
     'auth/wrong-password':'كلمة السر غير صحيحة.',
     'auth/invalid-credential':'البريد أو كلمة السر غير صحيحة.',
     'auth/too-many-requests':'محاولات كثيرة. حاول لاحقاً.',
-    'auth/network-request-failed':'تعذر الاتصال. تحقق من الإنترنت.',
-    'permission-denied':'قواعد قاعدة البيانات لا تسمح بهذه العملية.'
+    'auth/network-request-failed':'تعذر الاتصال. تحقق من الإنترنت.'
   };
 
   var en = {
@@ -844,8 +841,7 @@ function friendlyAuthError(error) {
     'auth/wrong-password':'Incorrect password.',
     'auth/invalid-credential':'Incorrect email or password.',
     'auth/too-many-requests':'Too many attempts. Try again later.',
-    'auth/network-request-failed':'Network error. Check your connection.',
-    'permission-denied':'Database rules do not allow this operation.'
+    'auth/network-request-failed':'Network error. Check your connection.'
   };
 
   return (currentLang === 'ar' ? ar[code] : en[code]) ||
@@ -966,9 +962,24 @@ window.addEventListener('load', function() {
 
 setTimeout(hideSplash, 6000);
 
+/* استعادة الجلسة المحلية أو حساب Firebase القديم */
 auth.onAuthStateChanged(function(user) {
   if (user) {
+    localStorage.removeItem('efbl_local_session');
     showStore(user);
+    return;
+  }
+
+  var savedSession = localStorage.getItem('efbl_local_session');
+
+  if (savedSession) {
+    try {
+      var localUser = JSON.parse(savedSession);
+      showStore(localUser);
+    } catch (error) {
+      localStorage.removeItem('efbl_local_session');
+      showAuth();
+    }
   } else {
     showAuth();
   }
@@ -1034,8 +1045,6 @@ async function handleAuthAction() {
     if (currentMode === 'old') {
       await auth.signInWithEmailAndPassword(email, pass);
 
-      // الانتقال للمتجر يتم تلقائياً عند تأكيد حالة الحساب.
-      // لا نعرض رسالة نجاح داخل شاشة تسجيل الدخول بعد إخفائها.
     } else {
       tempEmail = email;
       tempPass = pass;
@@ -1093,6 +1102,7 @@ function resendCode() {
   );
 }
 
+/* الدخول مباشرة عند إدخال الكود الصحيح دون استخدام قاعدة بيانات */
 async function verifyCode() {
   if (authBusy) return;
 
@@ -1118,15 +1128,16 @@ async function verifyCode() {
   confirmButton.disabled = true;
 
   try {
-    // إنشاء الحساب في نظام الحسابات أولاً.
-    var credential = await auth.createUserWithEmailAndPassword(
-      tempEmail,
-      tempPass
+    var localUser = {
+      uid: 'local_' + encodeURIComponent(tempEmail),
+      email: tempEmail
+    };
+
+    localStorage.setItem(
+      'efbl_local_session',
+      JSON.stringify(localUser)
     );
 
-    var user = credential.user;
-
-    // إخفاء بيانات التحقق المؤقتة.
     document.getElementById('topNotification').style.display = 'none';
     clearTimeout(window.efblCodeTimer);
 
@@ -1136,30 +1147,16 @@ async function verifyCode() {
 
     document.getElementById('enteredCode').value = '';
 
-    // نجاح إنشاء الحساب يكفي لدخول المتجر.
-    // قاعدة البيانات لا تتحكم في السماح بالدخول.
-    showStore(user);
+    showStore(localUser);
     showVipWelcome();
 
-    // حفظ بيانات الحساب محاولة منفصلة وغير مانعة للدخول.
-    db.collection('users').doc(user.uid).set({
-      email: user.email,
-      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-      accountStatus: 'active'
-    }, { merge: true }).catch(function(dbError) {
-      console.warn(
-        'تعذر حفظ بيانات الحساب في قاعدة البيانات، لكن تم إنشاء الحساب والدخول:',
-        dbError
-      );
-    });
-
   } catch (error) {
-    // إذا فشل إنشاء الحساب نفسه، لا يتم الدخول للمتجر.
-    showStatus(friendlyAuthError(error), false);
-
-    document.getElementById('step1').style.display = 'none';
-    document.getElementById('step2').style.display = 'block';
-
+    showStatus(
+      currentLang === 'ar'
+        ? 'تعذر حفظ الجلسة على هذا الجهاز.'
+        : 'Could not save the session on this device.',
+      false
+    );
   } finally {
     authBusy = false;
     confirmButton.disabled = false;
@@ -1172,7 +1169,7 @@ function getCartStorageKey() {
     : 'efbl_cart_guest';
 }
 
-// قراءة السلة المحلية مع حماية الموقع من البيانات التالفة.
+/* قراءة السلة المحلية */
 function readLocalCart() {
   try {
     var raw = localStorage.getItem(getCartStorageKey());
@@ -1193,6 +1190,7 @@ function readLocalCart() {
   }
 }
 
+/* حفظ السلة محلياً فقط - لا توجد قاعدة بيانات */
 function saveCart() {
   try {
     localStorage.setItem(
@@ -1202,52 +1200,11 @@ function saveCart() {
   } catch (error) {
     console.warn('تعذر حفظ السلة محلياً:', error);
   }
-
-  if (currentUser) {
-    db.collection('users').doc(currentUser.uid).set({
-      cartItems: cartItems,
-      cartUpdatedAt: firebase.firestore.FieldValue.serverTimestamp()
-    }, { merge: true }).catch(function(error) {
-      console.warn('تعذر مزامنة السلة:', error);
-    });
-  }
 }
 
-async function loadCart() {
-  if (!currentUser) return;
-
-  var loadingUserId = currentUser.uid;
-
-  try {
-    var saved = await db.collection('users')
-      .doc(loadingUserId)
-      .get();
-
-    // التأكد أن المستخدم لم يتغير أثناء تحميل السلة.
-    if (!currentUser || currentUser.uid !== loadingUserId) return;
-
-    if (
-      saved.exists &&
-      Array.isArray(saved.data().cartItems)
-    ) {
-      cartItems = saved.data().cartItems.filter(function(item) {
-        return item &&
-          typeof item.cardId === 'string' &&
-          typeof item.name === 'string' &&
-          Number.isFinite(Number(item.price));
-      });
-    } else {
-      cartItems = readLocalCart();
-    }
-
-  } catch (error) {
-    console.warn('تعذر تحميل السلة من قاعدة البيانات:', error);
-
-    if (!currentUser || currentUser.uid !== loadingUserId) return;
-
-    cartItems = readLocalCart();
-  }
-
+/* تحميل السلة محلياً فقط */
+function loadCart() {
+  cartItems = readLocalCart();
   restoreSelectedCards();
   updateCartDisplay();
 }
@@ -1501,7 +1458,13 @@ function sendSupportMessage() {
 
 async function logoutUser() {
   try {
-    await auth.signOut();
+    var isLocalSession = !!localStorage.getItem('efbl_local_session');
+
+    localStorage.removeItem('efbl_local_session');
+
+    if (!isLocalSession && auth.currentUser) {
+      await auth.signOut();
+    }
 
     cartItems = [];
 
@@ -1514,4 +1477,4 @@ async function logoutUser() {
 }
 </script>
 </body>
-</html>
+</html> 
