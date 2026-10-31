@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl" id="htmlRoot">
 <head>
@@ -573,7 +574,9 @@ input:focus, textarea:focus {
         <button type="button" class="cart-btn" onclick="togglePackage('15,000 كوين (1100 د.ل)', 1100, 'card-15000')" data-i18n="addCart">إضافة إلى السلة 🛒</button>
       </div>
     </div>
-      <div id="sec-cart" class="app-section">
+  </div>
+
+  <div id="sec-cart" class="app-section">
     <div class="section-header" data-i18n="cartTitleHeader">🛒 سلة المشتريات والطلبات</div>
     <div class="cart-summary-box">
       <ul id="cartItemsList" class="cart-items-list">
@@ -816,7 +819,7 @@ function friendlyAuthError(error) {
 function toggleLanguage() {
   currentLang = currentLang === 'ar' ? 'en' : 'ar';
   var root = document.getElementById('htmlRoot');
-  root.setAttribute('lang', currentLang);
+          root.setAttribute('lang', currentLang);
   root.setAttribute('dir', currentLang === 'ar' ? 'rtl' : 'ltr');
 
   document.getElementById('langText').innerText = currentLang === 'ar' ? 'English' : 'عربي';
@@ -1121,7 +1124,6 @@ function updateCartDisplay() {
     translations[currentLang].totalPrice + totalSum + ' ' +
     (currentLang === 'ar' ? 'د.ل' : 'LYD');
 }
-
 function removeCartItem(cardId) {
   cartItems = cartItems.filter(function(item) {
     return item.cardId !== cardId;
@@ -1218,4 +1220,4 @@ async function logoutUser() {
 }
 </script>
 </body>
-</html>                                                                                                                                                                          </div>
+</html>  
