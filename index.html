@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar" dir="rtl" id="htmlRoot">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,6 +15,7 @@ body {
   background-color: #080b12;
   color: #fff;
   padding: 15px;
+  padding-bottom: 90px;
   overflow-x: hidden;
 }
 #splashScreen {
@@ -124,6 +125,25 @@ body {
   border-radius: 10px;
   margin-top: 4px;
 }
+.top-bar-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+.lang-switcher {
+  background: #111927;
+  border: 1px solid rgba(0,210,255,.3);
+  color: #00d2ff;
+  padding: 8px 14px;
+  border-radius: 10px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+}
 .welcome-banner {
   background: linear-gradient(135deg, #111a2e, #0a1120);
   border: 1px solid rgba(0,210,255,.3);
@@ -162,6 +182,8 @@ body {
   text-align: center;
 }
 .store-screen { display: none; }
+.app-section { display: none; }
+.app-section.active-section { display: block; }
 .mode-select-box {
   display: flex;
   gap: 10px;
@@ -186,7 +208,7 @@ body {
 .section-header {
   font-size: 18px;
   color: #f2c94c;
-  margin: 30px 0 14px;
+  margin: 25px 0 14px;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -270,7 +292,7 @@ body {
   color: #38ef7d;
   text-align: center;
 }
-input[type="email"], input[type="password"], input[type="text"] {
+input[type="email"], input[type="password"], input[type="text"], textarea {
   width: 100%;
   padding: 14px;
   margin-bottom: 14px;
@@ -281,7 +303,7 @@ input[type="email"], input[type="password"], input[type="text"] {
   font-size: 14px;
   outline: none;
 }
-input:focus {
+input:focus, textarea:focus {
   border-color: #00d2ff;
 }
 .email-status {
@@ -323,6 +345,103 @@ input:focus {
   color: #fff;
   font-size: 16px;
 }
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: #0b101d;
+  border-top: 1px solid rgba(255,255,255,.1);
+  display: flex;
+  justify-content: space-around;
+  padding: 10px 0;
+  z-index: 9998;
+  box-shadow: 0 -5px 20px rgba(0,0,0,.8);
+}
+.nav-item {
+  background: none;
+  border: none;
+  color: #718096;
+  font-size: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  flex: 1;
+  font-weight: bold;
+}
+.nav-item.active {
+  color: #00d2ff;
+}
+.nav-item span.icon {
+  font-size: 20px;
+}
+.support-card-box {
+  background: linear-gradient(145deg, #111a2e, #0a1120);
+  border: 1.5px solid rgba(0,210,255,.3);
+  border-radius: 20px;
+  padding: 22px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+.support-avatar-wrap {
+  position: relative;
+  width: 75px;
+  height: 75px;
+  margin: 0 auto 12px;
+}
+.support-avatar {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #00d2ff;
+}
+.verified-badge-icon {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background: #0088cc;
+  color: white;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  border: 2px solid #0b101d;
+}
+.cart-summary-box {
+  background: linear-gradient(145deg, #111a2e, #0a1120);
+  border: 1.5px solid rgba(56,239,125,.3);
+  border-radius: 18px;
+  padding: 18px;
+  margin-bottom: 18px;
+}
+.cart-items-list {
+  list-style: none;
+  margin-bottom: 12px;
+  max-height: 150px;
+  overflow-y: auto;
+}
+.cart-items-list li {
+  padding: 8px 10px;
+  background: rgba(255,255,255,.03);
+  margin-bottom: 6px;
+  border-radius: 8px;
+  font-size: 13.5px;
+  display: flex;
+  justify-content: space-between;
+}
+.total-price-tag {
+  font-size: 16px;
+  color: #38ef7d;
+  font-weight: bold;
+  margin-bottom: 15px;
+  text-align: left;
+}
 </style>
 </head>
 <body>
@@ -331,126 +450,341 @@ input:focus {
   <div class="splash-logo-container">
     <div class="splash-title-efbl">EFBL</div>
     <div class="splash-title-store">STORE</div>
-    <div class="splash-subtext">أقوى متجر كوينز وعروض بيس في ليبيا</div>
+    <div class="splash-subtext" data-i18n="splashSub">أقوى متجر كوينز وعروض بيس في ليبيا</div>
     <div class="splash-loader"><div class="splash-loader-bar"></div></div>
   </div>
 </div>
 
 <div id="topNotification" class="top-notification">
-  📩 كود التحقق (6 أرقام):
+  📩 <span data-i18n="codeLabel">كود التحقق (6 أرقام):</span>
   <span id="generatedCodeDisplay" style="background:#060911;padding:4px 12px;border-radius:8px;letter-spacing:3px;color:#00d2ff;">------</span>
-  <div style="font-size:11px;color:#e2e8f0;margin-top:5px;">سيختفي هذا الإشعار خلال 15 ثانية!</div>
+  <div style="font-size:11px;color:#e2e8f0;margin-top:5px;" data-i18n="codeNote">سيختفي هذا الإشعار خلال 15 ثانية!</div>
 </div>
 
 <div id="vipWelcomeToast" class="vip-welcome-toast">
-  <h3>أهلاً بك في أفضل كلان داخل ليبيا</h3>
+  <h3 data-i18n="vipTitle">أهلاً بك في أفضل كلان داخل ليبيا</h3>
   <span>[EFBL_ STORE]</span>
 </div>
 
 <div id="authContainer" class="auth-screen">
-  <h2>بوابة دخول المتجر</h2>
+  <div class="top-bar-controls">
+    <button type="button" class="lang-switcher" onclick="toggleLanguage()">🌐 <span id="langText">English</span></button>
+  </div>
+  <h2 data-i18n="authTitle">بوابة دخول المتجر</h2>
   <div class="mode-select-box">
-    <button id="btnModeOld" type="button" class="mode-btn active" onclick="switchMode('old')">لدي حساب قديم</button>
-    <button id="btnModeNew" type="button" class="mode-btn" onclick="switchMode('new')">إنشاء حساب جديد</button>
+    <button id="btnModeOld" type="button" class="mode-btn active" onclick="switchMode('old')" data-i18n="oldAcc">لدي حساب قديم</button>
+    <button id="btnModeNew" type="button" class="mode-btn" onclick="switchMode('new')" data-i18n="newAcc">إنشاء حساب جديد</button>
   </div>
   <div id="step1">
-    <p id="authSubtitle" style="font-size:12px;color:#a0aec0;margin-bottom:14px;text-align:center;">أدخل بريدك وكلمة السر لتسجيل الدخول بحسابك القديم</p>
+    <p id="authSubtitle" style="font-size:12px;color:#a0aec0;margin-bottom:14px;text-align:center;" data-i18n="oldSub">أدخل بريدك وكلمة السر لتسجيل الدخول بحسابك القديم</p>
     <input type="email" id="userEmail" placeholder="البريد الإلكتروني (مثال: user@gmail.com)">
     <div id="emailStatus" class="email-status"></div>
     <input type="password" id="userPass" placeholder="كلمة السر">
-    <button id="authMainBtn" type="button" class="btn" onclick="handleAuthAction()">تسجيل الدخول</button>
+    <button id="authMainBtn" type="button" class="btn" onclick="handleAuthAction()" data-i18n="loginBtn">تسجيل الدخول</button>
   </div>
   <div id="step2" style="display:none;margin-top:15px;">
-    <h2>تأكيد كود الحساب الجديد</h2>
-    <p style="font-size:12px;color:#a0aec0;margin-bottom:14px;text-align:center;">اكتب كود الـ 6 أرقام الذي ظهر أعلى الشاشة:</p>
+    <h2 data-i18n="verifyTitle">تأكيد كود الحساب الجديد</h2>
+    <p style="font-size:12px;color:#a0aec0;margin-bottom:14px;text-align:center;" data-i18n="verifySub">اكتب كود الـ 6 أرقام الذي ظهر أعلى الشاشة:</p>
     <input type="text" id="enteredCode" placeholder="أدخل الكود المكون من 6 أرقام" maxlength="6">
-    <button type="button" class="btn" onclick="verifyCode()">تأكيد وإنشاء الحساب</button>
-    <button type="button" class="btn resend-btn" onclick="resendCode()">🔄 إعادة إرسال الكود</button>
+    <button type="button" class="btn" onclick="verifyCode()" data-i18n="confirmBtn">تأكيد وإنشاء الحساب</button>
+    <button type="button" class="btn resend-btn" onclick="resendCode()" data-i18n="resendBtn">🔄 إعادة إرسال الكود</button>
+  </div>
+</div>
+<div id="storeScreen" class="store-screen">
+  <div class="top-bar-controls" style="margin-top: 5px;">
+    <button type="button" class="lang-switcher" onclick="toggleLanguage()">🌐 <span id="langText2">English</span></button>
+  </div>
+
+  <!-- القسم الأول: الرئيسية وعروض الشحن -->
+  <div id="sec-home" class="app-section active-section">
+    <div class="welcome-banner">
+      <h2 data-i18n="storeWelcome">🎉 أهلاً بك في متجر EFBL STORE العظمة!</h2>
+      <p data-i18n="storeSub">سرعة في التسليم، وأفضل أسعار كوينز وعروض بيس في ليبيا.</p>
+    </div>
+
+    <div class="section-header" data-i18n="paymentHeader">💳 طرق الدفع المتاحة</div>
+    <div class="payment-box">
+      <div class="payment-options">
+        <p data-i18n="pay1">1️⃣ كروت تعبئة ليبيانا.</p>
+        <p>2️⃣ <span data-i18n="pay2">تحويل مصرفي (⭐ الأفضل والأسعار أقل!).</span></p>
+      </div>
+    </div>
+
+    <div class="section-header" data-i18n="offersHeader">🎁 عروض اللاعبين والمكافآت</div>
+    <div class="card-grid">
+      <div class="card" id="card-suarez">
+        <img src="https://img.icons8.com/emoji/96/fire.png" class="coin-img" alt="سواريز">
+        <h3 data-i18n="suarezTitle">سواريز</h3><div class="price">13 د.ل</div>
+        <button type="button" class="cart-btn" onclick="togglePackage('عرض اللاعب سواريز (13 د.ل)', 13, 'card-suarez')" data-i18n="addCart">إضافة إلى السلة 🛒</button>
+      </div>
+      <div class="card" id="card-casillas">
+        <img src="https://img.icons8.com/emoji/96/gloves.png" class="coin-img" alt="كاسياس">
+        <h3 data-i18n="casillasTitle">كاسياس</h3><div class="price">33 د.ل</div>
+        <button type="button" class="cart-btn" onclick="togglePackage('عرض اللاعب كاسياس (33 د.ل)', 33, 'card-casillas')" data-i18n="addCart">إضافة إلى السلة 🛒</button>
+      </div>
+    </div>
+
+    <div class="section-header" data-i18n="coinsHeader">🪙 شحن كوينز إي فوتبول</div>
+    <div class="card-grid">
+      <div class="card" id="card-100">
+        <img src="https://img.icons8.com/gold-badges/96/gold-bars.png" class="coin-img" alt="كوينز">
+        <h3>100 كوين</h3><div class="price">13 د.ل</div>
+        <button type="button" class="cart-btn" onclick="togglePackage('100 كوين (13 د.ل)', 13, 'card-100')" data-i18n="addCart">إضافة إلى السلة 🛒</button>
+      </div>
+      <div class="card" id="card-300">
+        <img src="https://img.icons8.com/gold-badges/96/gold-bars.png" class="coin-img" alt="كوينز">
+        <h3>300 كوين</h3><div class="price">33 د.ل</div>
+        <button type="button" class="cart-btn" onclick="togglePackage('300 كوين (33 د.ل)', 33, 'card-300')" data-i18n="addCart">إضافة إلى السلة 🛒</button>
+      </div>
+      <div class="card" id="card-500">
+        <img src="https://img.icons8.com/gold-badges/96/gold-bars.png" class="coin-img" alt="كوينز">
+        <h3>500 كوين</h3><div class="price">55 د.ل</div>
+        <button type="button" class="cart-btn" onclick="togglePackage('500 كوين (55 د.ل)', 55, 'card-500')" data-i18n="addCart">إضافة إلى السلة 🛒</button>
+      </div>
+      <div class="card" id="card-1000">
+        <img src="https://img.icons8.com/gold-badges/96/gold-bars.png" class="coin-img" alt="كوينز">
+        <h3>1,000 كوين</h3><div class="price">98 د.ل</div>
+        <button type="button" class="cart-btn" onclick="togglePackage('1,000 كوين (98 د.ل)', 98, 'card-1000')" data-i18n="addCart">إضافة إلى السلة 🛒</button>
+      </div>
+      <div class="card" id="card-2000">
+        <img src="https://img.icons8.com/gold-badges/96/gold-bars.png" class="coin-img" alt="كوينز">
+        <h3>2,000 كوين</h3><div class="price">185 د.ل</div>
+        <button type="button" class="cart-btn" onclick="togglePackage('2,000 كوين (185 د.ل)', 185, 'card-2000')" data-i18n="addCart">إضافة إلى السلة 🛒</button>
+      </div>
+      <div class="card" id="card-3000">
+        <img src="https://img.icons8.com/gold-badges/96/gold-bars.png" class="coin-img" alt="كوينز">
+        <h3>3,000 كوين</h3><div class="price">260 د.ل</div>
+        <button type="button" class="cart-btn" onclick="togglePackage('3,000 كوين (260 د.ل)', 260, 'card-3000')" data-i18n="addCart">إضافة إلى السلة 🛒</button>
+      </div>
+      <div class="card" id="card-5000">
+        <img src="https://img.icons8.com/gold-badges/96/gold-bars.png" class="coin-img" alt="كوينز">
+        <h3>5,000 كوين</h3><div class="price">395 د.ل</div>
+        <button type="button" class="cart-btn" onclick="togglePackage('5,000 كوين (395 د.ل)', 395, 'card-5000')" data-i18n="addCart">إضافة إلى السلة 🛒</button>
+      </div>
+      <div class="card" id="card-10000">
+        <img src="https://img.icons8.com/gold-badges/96/gold-bars.png" class="coin-img" alt="كوينز">
+        <h3>10,000 كوين</h3><div class="price">725 د.ل</div>
+        <button type="button" class="cart-btn" onclick="togglePackage('10,000 كوين (725 د.ل)', 725, 'card-10000')" data-i18n="addCart">إضافة إلى السلة 🛒</button>
+      </div>
+      <div class="card" id="card-15000" style="grid-column:span 2;">
+        <img src="https://img.icons8.com/gold-badges/96/gold-bars.png" class="coin-img" alt="كوينز">
+        <h3>15,000 كوين</h3><div class="price">1100 د.ل</div>
+        <button type="button" class="cart-btn" onclick="togglePackage('15,000 كوين (1100 د.ل)', 1100, 'card-15000')" data-i18n="addCart">إضافة إلى السلة 🛒</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- القسم الثاني: السلة وإتمام الطلب -->
+  <div id="sec-cart" class="app-section">
+    <div class="section-header" data-i18n="cartTitleHeader">🛒 سلة المشتريات والطلبات</div>
+    <div class="cart-summary-box">
+      <ul id="cartItemsList" class="cart-items-list">
+        <li style="color:#a0aec0;text-align:center;" data-i18n="emptyCart">السلة فارغة حالياً.. اختر باقاتك من الرئيسية.</li>
+      </ul>
+      <div class="total-price-tag" id="totalPriceDisplay">المجموع الإجمالي: 0 د.ل</div>
+    </div>
+
+    <div class="payment-box" style="margin-bottom: 15px;">
+      <h3 style="font-size:15px;color:#f2c94c;margin-bottom:8px;" data-i18n="selectPayMethod">اختر طريقة الدفع:</h3>
+      <label style="display:block;margin-bottom:6px;cursor:pointer;"><input type="radio" name="payMethod" value="libyana" checked> <span data-i18n="libyanaPay">كروت تعبئة ليبيانا</span></label>
+      <label style="display:block;cursor:pointer;"><input type="radio" name="payMethod" value="bank"> <span data-i18n="bankPay">تحويل مصرفي (⭐ الأسعار أقل وأوفر!)</span></label>
+    </div>
+
+    <div class="form-section" style="margin-top:0;">
+      <h2 data-i18n="sendOrderHeader">📩 إرسال الطلب النهائي</h2>
+      <p style="font-size:13px;color:#a0aec0;margin-bottom:14px;text-align:center;" data-i18n="sendOrderSub">اختر الطريقة للإرسال للإدارة:</p>
+      <div class="contact-btns">
+        <button type="button" class="btn whatsapp-btn" onclick="sendOrder('whatsapp')" data-i18n="waBtn">💬 إرسال الطلب عبر الواتساب</button>
+        <button type="button" class="btn telegram-btn" onclick="sendOrder('telegram')" data-i18n="tgBtn">✈️ إرسال الطلب عبر التليجرام</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- القسم الثالث: الدعم الفني -->
+  <div id="sec-support" class="app-section">
+    <div class="section-header" data-i18n="supportHeader">💬 فريق الدعم الفني</div>
+    <div class="support-card-box">
+      <div class="support-avatar-wrap">
+        <img src="https://img.icons8.com/fluents/96/user-male-circle.png" class="support-avatar" alt="الدعم">
+        <div class="verified-badge-icon">✔</div>
+      </div>
+      <h3 style="font-size:18px;color:#fff;margin-bottom:4px;">فريق دعم EFBL</h3>
+      <p style="font-size:12.5px;color:#38ef7d;font-weight:bold;" data-i18n="supportOnline">متواجدون لخدمتك على مدار الساعة 🟢</p>
+    </div>
+
+    <div class="form-section" style="margin-top:0;">
+      <h2 data-i18n="supportFormTitle">أرسل مشكلتك أو استفسارك</h2>
+      <textarea id="supportMsgInput" rows="4" placeholder="اكتب مشكلتك، فكرتك أو استفسارك هنا بكل تفصيل..."></textarea>
+      <button type="button" class="btn" onclick="sendSupportMessage()" data-i18n="supportSendBtn">إرسال للدعم عبر الواتساب 🚀</button>
+    </div>
+  </div>
+
+  <!-- القسم الرابع: حسابي -->
+  <div id="sec-profile" class="app-section">
+    <div class="section-header" data-i18n="profileHeader">👤 حسابي الشخصي</div>
+    <div class="support-card-box" style="text-align:right;padding:20px;">
+      <p style="font-size:14px;color:#a0aec0;margin-bottom:8px;"><strong data-i18n="loggedEmail">البريد المسجل:</strong> <span id="profileEmailVal" style="color:#00d2ff;">--</span></p>
+      <p style="font-size:14px;color:#a0aec0;margin-bottom:15px;"><strong data-i18n="accStatus">حالة الحساب:</strong> <span style="color:#38ef7d;" data-i18n="vipActive">نشط ومرخص VIP ⭐</span></p>
+      <button type="button" class="btn" style="background:linear-gradient(135deg,#ff416c,#ff4b2b);" onclick="logoutUser()" data-i18n="logoutBtn">تسجيل الخروج 🚪</button>
+    </div>
   </div>
 </div>
 
-<div id="storeScreen" class="store-screen">
-  <div class="welcome-banner">
-    <h2>🎉 أهلاً بك في متجر EFBL STORE العظمة!</h2>
-    <p>سرعة في التسليم، وأفضل أسعار كوينز وعروض بيس في ليبيا.</p>
-  </div>
+<!-- شريط التنقل السفلي -->
+<nav class="bottom-nav" id="bottomNavContainer" style="display:none;">
+  <button type="button" class="nav-item active" onclick="switchSection('home', this)">
+    <span class="icon">⚡</span>
+    <span data-i18n="navHome">الرئيسية</span>
+  </button>
+  <button type="button" class="nav-item" onclick="switchSection('cart', this)">
+    <span class="icon">🛒</span>
+    <span data-i18n="navCart">السلة</span>
+  </button>
+  <button type="button" class="nav-item" onclick="switchSection('support', this)">
+    <span class="icon">💬</span>
+    <span data-i18n="navSupport">الدعم</span>
+  </button>
+  <button type="button" class="nav-item" onclick="switchSection('profile', this)">
+    <span class="icon">👤</span>
+    <span data-i18n="navProfile">حسابي</span>
+  </button>
+</nav>
 
-  <div class="section-header">💳 طرق الدفع المتاحة</div>
-  <div class="payment-box">
-    <div class="payment-options">
-      <p>1️⃣ كروت تعبئة ليبيانا.</p>
-      <p>2️⃣ <span>تحويل مصرفي</span> (⭐ الأفضل والأسعار أقل!).</p>
-    </div>
-  </div>
-
-  <div class="section-header">🎁 عروض اللاعبين والمكافآت</div>
-  <div class="card-grid">
-    <div class="card" id="card-suarez">
-      <img src="https://img.icons8.com/emoji/96/fire.png" class="coin-img" alt="سواريز">
-      <h3>سواريز</h3><div class="price">13 د.ل</div>
-      <button type="button" class="cart-btn" onclick="togglePackage('عرض اللاعب سواريز (13 د.ل)','card-suarez')">إضافة إلى السلة 🛒</button>
-    </div>
-    <div class="card" id="card-casillas">
-      <img src="https://img.icons8.com/emoji/96/gloves.png" class="coin-img" alt="كاسياس">
-      <h3>كاسياس</h3><div class="price">33 د.ل</div>
-      <button type="button" class="cart-btn" onclick="togglePackage('عرض اللاعب كاسياس (33 د.ل)','card-casillas')">إضافة إلى السلة 🛒</button>
-    </div>
-  </div>
-
-  <div class="section-header">🪙 شحن كوينز إي فوتبول</div>
-  <div class="card-grid">
-    <div class="card" id="card-100">
-      <img src="https://img.icons8.com/gold-badges/96/gold-bars.png" class="coin-img" alt="كوينز">
-      <h3>100 كوين</h3><div class="price">13 د.ل</div>
-      <button type="button" class="cart-btn" onclick="togglePackage('100 كوين (13 د.ل)','card-100')">إضافة إلى السلة 🛒</button>
-    </div>
-    <div class="card" id="card-300">
-      <img src="https://img.icons8.com/gold-badges/96/gold-bars.png" class="coin-img" alt="كوينز">
-      <h3>300 كوين</h3><div class="price">33 د.ل</div>
-      <button type="button" class="cart-btn" onclick="togglePackage('300 كوين (33 د.ل)','card-300')">إضافة إلى السلة 🛒</button>
-    </div>
-    <div class="card" id="card-500">
-      <img src="https://img.icons8.com/gold-badges/96/gold-bars.png" class="coin-img" alt="كوينز">
-      <h3>500 كوين</h3><div class="price">55 د.ل</div>
-      <button type="button" class="cart-btn" onclick="togglePackage('500 كوين (55 د.ل)','card-500')">إضافة إلى السلة 🛒</button>
-    </div>
-    <div class="card" id="card-1000">
-      <img src="https://img.icons8.com/gold-badges/96/gold-bars.png" class="coin-img" alt="كوينز">
-      <h3>1,000 كوين</h3><div class="price">98 د.ل</div>
-      <button type="button" class="cart-btn" onclick="togglePackage('1,000 كوين (98 د.ل)','card-1000')">إضافة إلى السلة 🛒</button>
-    </div>
-    <div class="card" id="card-2000">
-      <img src="https://img.icons8.com/gold-badges/96/gold-bars.png" class="coin-img" alt="كوينز">
-      <h3>2,000 كوين</h3><div class="price">185 د.ل</div>
-      <button type="button" class="cart-btn" onclick="togglePackage('2,000 كوين (185 د.ل)','card-2000')">إضافة إلى السلة 🛒</button>
-    </div>
-    <div class="card" id="card-3000">
-      <img src="https://img.icons8.com/gold-badges/96/gold-bars.png" class="coin-img" alt="كوينز">
-      <h3>3,000 كوين</h3><div class="price">260 د.ل</div>
-      <button type="button" class="cart-btn" onclick="togglePackage('3,000 كوين (260 د.ل)','card-3000')">إضافة إلى السلة 🛒</button>
-    </div>
-    <div class="card" id="card-5000">
-      <img src="https://img.icons8.com/gold-badges/96/gold-bars.png" class="coin-img" alt="كوينز">
-      <h3>5,000 كوين</h3><div class="price">395 د.ل</div>
-      <button type="button" class="cart-btn" onclick="togglePackage('5,000 كوين (395 د.ل)','card-5000')">إضافة إلى السلة 🛒</button>
-    </div>
-    <div class="card" id="card-10000">
-      <img src="https://img.icons8.com/gold-badges/96/gold-bars.png" class="coin-img" alt="كوينز">
-      <h3>10,000 كوين</h3><div class="price">725 د.ل</div>
-      <button type="button" class="cart-btn" onclick="togglePackage('10,000 كوين (725 د.ل)','card-10000')">إضافة إلى السلة 🛒</button>
-    </div>
-    <div class="card" id="card-15000" style="grid-column:span 2;">
-      <img src="https://img.icons8.com/gold-badges/96/gold-bars.png" class="coin-img" alt="كوينز">
-      <h3>15,000 كوين</h3><div class="price">1100 د.ل</div>
-      <button type="button" class="cart-btn" onclick="togglePackage('15,000 كوين (1100 د.ل)','card-15000')">إضافة إلى السلة 🛒</button>
-    </div>
-  </div>
 <script>
 var currentMode = 'old';
 var generatedCode = '';
-var selectedPackages = [];
+var cartItems = []; // مصفوفة تحمل العناصر مع أسعارها
 var tempEmail = '';
 var tempPass = '';
+var currentLang = 'ar';
+
+var translations = {
+  ar: {
+    splashSub: "أقوى متجر كوينز وعروض بيس في ليبيا",
+    codeLabel: "كود التحقق (6 أرقام):",
+    codeNote: "سيختفي هذا الإشعار خلال 15 ثانية!",
+    vipTitle: "أهلاً بك في أفضل كلان داخل ليبيا",
+    authTitle: "بوابة دخول المتجر",
+    oldAcc: "لدي حساب قديم",
+    newAcc: "إنشاء حساب جديد",
+    oldSub: "أدخل بريدك وكلمة السر لتسجيل الدخول بحسابك القديم",
+    newSub: "أدخل بريدك وكلمة السر الجديدة لإنشاء حساب جديد",
+    loginBtn: "تسجيل الدخول",
+    verifyTitle: "تأكيد كود الحساب الجديد",
+    verifySub: "اكتب كود الـ 6 أرقام الذي ظهر أعلى الشاشة:",
+    confirmBtn: "تأكيد وإنشاء الحساب",
+    resendBtn: "🔄 إعادة إرسال الكود",
+    storeWelcome: "🎉 أهلاً بك في متجر EFBL STORE العظمة!",
+    storeSub: "سرعة في التسليم، وأفضل أسعار كوينز وعروض بيس في ليبيا.",
+    paymentHeader: "💳 طرق الدفع المتاحة",
+    pay1: "1️⃣ كروت تعبئة ليبيانا.",
+    pay2: "تحويل مصرفي (⭐ الأفضل والأسعار أقل!).",
+    offersHeader: "🎁 عروض اللاعبين والمكافآت",
+    suarezTitle: "سواريز",
+    casillasTitle: "كاسياس",
+    coinsHeader: "🪙 شحن كوينز إي فوتبول",
+    addCart: "إضافة إلى السلة 🛒",
+    removeCart: "إزالة ❌",
+    cartTitleHeader: "🛒 سلة المشتريات والطلبات",
+    emptyCart: "السلة فارغة حالياً.. اختر باقاتك من الرئيسية.",
+    totalPrice: "المجموع الإجمالي: ",
+    selectPayMethod: "اختر طريقة الدفع:",
+    libyanaPay: "كروت تعبئة ليبيانا",
+    bankPay: "تحويل مصرفي (⭐ الأسعار أقل وأوفر!)",
+    sendOrderHeader: "📩 إرسال الطلب النهائي",
+    sendOrderSub: "اختر الطريقة للإرسال للإدارة:",
+    waBtn: "💬 إرسال الطلب عبر الواتساب",
+    tgBtn: "✈️ إرسال الطلب عبر التليجرام",
+    supportHeader: "💬 فريق الدعم الفني",
+    supportOnline: "متواجدون لخدمتك على مدار الساعة 🟢",
+    supportFormTitle: "أرسل مشكلتك أو استفسارك",
+    supportPlaceholder: "اكتب مشكلتك، فكرتك أو استفسارك هنا بكل تفصيل...",
+    supportSendBtn: "إرسال للدعم عبر الواتساب 🚀",
+    profileHeader: "👤 حسابي الشخصي",
+    loggedEmail: "البريد المسجل:",
+    accStatus: "حالة الحساب:",
+    vipActive: "نشط ومرخص VIP ⭐",
+    logoutBtn: "تسجيل الخروج 🚪",
+    navHome: "الرئيسية",
+    navCart: "السلة",
+    navSupport: "الدعم",
+    navProfile: "حسابي"
+  },
+  en: {
+    splashSub: "The ultimate eFootball coins & offers store in Libya",
+    codeLabel: "Verification Code (6 digits):",
+    codeNote: "This notification will disappear in 15 seconds!",
+    vipTitle: "Welcome to the best clan in Libya",
+    authTitle: "Store Login Gateway",
+    oldAcc: "I have an account",
+    newAcc: "Create new account",
+    oldSub: "Enter your email & password to login to your existing account",
+    newSub: "Enter your email & new password to create a new account",
+    loginBtn: "Login",
+    verifyTitle: "Confirm New Account Code",
+    verifySub: "Type the 6-digit code shown at the top of the screen:",
+    confirmBtn: "Confirm & Register",
+    resendBtn: "🔄 Resend Code",
+    storeWelcome: "🎉 Welcome to EFBL STORE!",
+    storeSub: "Lightning-fast delivery & best eFootball prices in Libya.",
+    paymentHeader: "💳 Available Payment Methods",
+    pay1: "1️⃣ Libyana recharge cards.",
+    pay2: "Bank Transfer (⭐ Best choice & lower prices!).",
+    offersHeader: "🎁 Players & Rewards Offers",
+    suarezTitle: "Suarez",
+    casillasTitle: "Casillas",
+    coinsHeader: "🪙 eFootball Coins Top-Up",
+    addCart: "Add to Cart 🛒",
+    removeCart: "Remove ❌",
+    cartTitleHeader: "🛒 Shopping Cart & Orders",
+    emptyCart: "Cart is empty.. Choose your packages from Home.",
+    totalPrice: "Total Price: ",
+    selectPayMethod: "Select Payment Method:",
+    libyanaPay: "Libyana Cards",
+    bankPay: "Bank Transfer (⭐ Cheaper & Best!)",
+    sendOrderHeader: "📩 Send Final Order",
+    sendOrderSub: "Choose method to send to admin:",
+    waBtn: "💬 Send Order via WhatsApp",
+    tgBtn: "✈️ Send Order via Telegram",
+    supportHeader: "💬 Technical Support",
+    supportOnline: "Available 24/7 to serve you 🟢",
+    supportFormTitle: "Send Your Issue or Inquiry",
+    supportPlaceholder: "Write your problem, idea or inquiry here in detail...",
+    supportSendBtn: "Send to Support via WhatsApp 🚀",
+    profileHeader: "👤 My Profile",
+    loggedEmail: "Registered Email:",
+    accStatus: "Account Status:",
+    vipActive: "Active VIP & Verified ⭐",
+    logoutBtn: "Logout 🚪",
+    navHome: "Home",
+    navCart: "Cart",
+    navSupport: "Support",
+    navProfile: "Profile"
+  }
+};
+
+function toggleLanguage() {
+  currentLang = (currentLang === 'ar') ? 'en' : 'ar';
+  var root = document.getElementById('htmlRoot');
+  root.setAttribute('lang', currentLang);
+  root.setAttribute('dir', (currentLang === 'ar') ? 'rtl' : 'ltr');
+
+  document.getElementById('langText').innerText = (currentLang === 'ar') ? 'English' : 'عربي';
+  document.getElementById('langText2').innerText = (currentLang === 'ar') ? 'English' : 'عربي';
+
+  var elements = document.querySelectorAll('[data-i18n]');
+  elements.forEach(function(el) {
+    var key = el.getAttribute('data-i18n');
+    if (translations[currentLang][key]) {
+      el.innerText = translations[currentLang][key];
+    }
+  });
+
+  var supportInput = document.getElementById('supportMsgInput');
+  if (supportInput) {
+    supportInput.placeholder = (currentLang === 'ar') ? "اكتب مشكلتك، فكرتك أو استفسارك هنا بكل تفصيل..." : "Write your problem, idea or inquiry here in detail...";
+  }
+}
 
 function hideSplash() {
   var splash = document.getElementById('splashScreen');
@@ -468,11 +802,12 @@ window.addEventListener('load', function() {
   if (savedUser) {
     document.getElementById('authContainer').style.display = 'none';
     document.getElementById('storeScreen').style.display = 'block';
+    document.getElementById('bottomNavContainer').style.display = 'flex';
+    document.getElementById('profileEmailVal').innerText = savedUser;
     showVipWelcome();
   }
 });
 
-// لو علقت شاشة البداية لأي سبب، تختفي بعد 6 ثوانٍ
 setTimeout(hideSplash, 6000);
 
 function showVipWelcome() {
@@ -487,7 +822,6 @@ function showVipWelcome() {
 
 function switchMode(mode) {
   currentMode = mode;
-
   var btnOld = document.getElementById('btnModeOld');
   var btnNew = document.getElementById('btnModeNew');
   var subtitle = document.getElementById('authSubtitle');
@@ -500,13 +834,13 @@ function switchMode(mode) {
   if (mode === 'old') {
     btnOld.className = 'mode-btn active';
     btnNew.className = 'mode-btn';
-    subtitle.innerText = 'أدخل بريدك وكلمة السر لتسجيل الدخول بحسابك القديم';
-    mainBtn.innerText = 'تسجيل الدخول';
+    subtitle.innerText = translations[currentLang].oldSub;
+    mainBtn.innerText = translations[currentLang].loginBtn;
   } else {
     btnNew.className = 'mode-btn active';
     btnOld.className = 'mode-btn';
-    subtitle.innerText = 'أدخل بريدك وكلمة السر الجديدة لإنشاء حساب جديد';
-    mainBtn.innerText = 'إنشاء حساب جديد';
+    subtitle.innerText = translations[currentLang].newSub;
+    mainBtn.innerText = translations[currentLang].newAcc;
   }
 }
 
@@ -514,7 +848,6 @@ function handleAuthAction() {
   var emailInput = document.getElementById('userEmail');
   var passInput = document.getElementById('userPass');
   var statusDiv = document.getElementById('emailStatus');
-
   var email = emailInput.value.trim().toLowerCase();
   var pass = passInput.value;
 
@@ -522,39 +855,40 @@ function handleAuthAction() {
 
   if (!emailInput.checkValidity() || email.length < 5) {
     statusDiv.style.color = '#ff5555';
-    statusDiv.innerText = '❌ أدخل بريدًا إلكترونيًا صحيحًا.';
+    statusDiv.innerText = (currentLang === 'ar') ? '❌ أدخل بريدًا إلكترونيًا صحيحًا.' : '❌ Enter a valid email.';
     return;
   }
 
   if (pass.length < 4) {
     statusDiv.style.color = '#ff5555';
-    statusDiv.innerText = '❌ كلمة السر قصيرة جدًا.';
+    statusDiv.innerText = (currentLang === 'ar') ? '❌ كلمة السر قصيرة جدًا.' : '❌ Password too short.';
     return;
   }
 
   if (currentMode === 'old') {
     var savedPass = localStorage.getItem('pass_' + email);
-
     if (savedPass && savedPass === pass) {
       localStorage.setItem('efbl_logged_user', email);
       statusDiv.style.color = '#38ef7d';
-      statusDiv.innerText = '✅ تم تسجيل الدخول!';
+      statusDiv.innerText = (currentLang === 'ar') ? '✅ تم تسجيل الدخول!' : '✅ Logged in successfully!';
 
       setTimeout(function() {
         document.getElementById('authContainer').style.display = 'none';
         document.getElementById('storeScreen').style.display = 'block';
+        document.getElementById('bottomNavContainer').style.display = 'flex';
+        document.getElementById('profileEmailVal').innerText = email;
         showVipWelcome();
       }, 500);
     } else {
       statusDiv.style.color = '#ff5555';
-      statusDiv.innerText = '❌ الحساب غير موجود أو كلمة السر غير صحيحة.';
+      statusDiv.innerText = (currentLang === 'ar') ? '❌ الحساب غير موجود أو كلمة السر غير صحيحة.' : '❌ Account not found or incorrect password.';
     }
     return;
   }
 
   if (localStorage.getItem('pass_' + email)) {
     statusDiv.style.color = '#ff5555';
-    statusDiv.innerText = '⚠️ البريد مسجل من قبل. اختر تسجيل الدخول.';
+    statusDiv.innerText = (currentLang === 'ar') ? '⚠️ البريد مسجل من قبل. اختر تسجيل الدخول.' : '⚠️ Email already registered. Please login.';
     return;
   }
 
@@ -563,17 +897,14 @@ function handleAuthAction() {
   generateNewCode();
 
   statusDiv.style.color = '#38ef7d';
-  statusDiv.innerText = '✅ ظهر كود التجربة أعلى الصفحة.';
+  statusDiv.innerText = (currentLang === 'ar') ? '✅ ظهر كود التجربة أعلى الصفحة.' : '✅ Verification code shown at the top.';
 
   document.getElementById('step1').style.display = 'none';
   document.getElementById('step2').style.display = 'block';
 }
 
 function generateNewCode() {
-  generatedCode = String(
-    Math.floor(100000 + Math.random() * 900000)
-  );
-
+  generatedCode = String(Math.floor(100000 + Math.random() * 900000));
   var notification = document.getElementById('topNotification');
   document.getElementById('generatedCodeDisplay').innerText = generatedCode;
   notification.style.display = 'block';
@@ -585,80 +916,14 @@ function generateNewCode() {
 
 function resendCode() {
   generateNewCode();
-  alert('ظهر كود جديد أعلى الصفحة.');
+  alert((currentLang === 'ar') ? 'ظهر كود جديد أعلى الصفحة.' : 'A new code has appeared at the top.');
 }
 
 function verifyCode() {
   var inputCode = document.getElementById('enteredCode').value.trim();
 
-  if (
-    inputCode === generatedCode &&
-    tempEmail !== '' &&
-    tempPass !== ''
-  ) {
+  if (inputCode === generatedCode && tempEmail !== '' && tempPass !== '') {
     localStorage.setItem('pass_' + tempEmail, tempPass);
     localStorage.setItem('efbl_logged_user', tempEmail);
 
-    document.getElementById('topNotification').style.display = 'none';
-    document.getElementById('authContainer').style.display = 'none';
-    document.getElementById('storeScreen').style.display = 'block';
-
-    showVipWelcome();
-  } else {
-    alert('❌ الكود غير صحيح. تأكد من الأرقام الستة.');
-  }
-}
-
-function togglePackage(pkgName, cardId) {
-  var cardElement = document.getElementById(cardId);
-  if (!cardElement) return;
-
-  var btnElement = cardElement.querySelector('.cart-btn');
-  var index = selectedPackages.indexOf(pkgName);
-
-  if (index === -1) {
-    selectedPackages.push(pkgName);
-    cardElement.classList.add('selected');
-    btnElement.innerText = 'تمت الإضافة ✅';
-  } else {
-    selectedPackages.splice(index, 1);
-    cardElement.classList.remove('selected');
-    btnElement.innerText = 'إضافة إلى السلة 🛒';
-  }
-}
-
-function sendOrder(platform) {
-  if (selectedPackages.length === 0) {
-    alert('اختر باقة واحدة على الأقل أولًا!');
-    return;
-  }
-
-  var msg = 'مرحبًا، أريد طلب الباقات التالية:\n- ' +
-    selectedPackages.join('\n- ');
-
-  if (platform === 'whatsapp') {
-    window.open(
-      'https://wa.me/218943437286?text=' +
-      encodeURIComponent(msg),
-      '_blank'
-    );
-  } else if (platform === 'telegram') {
-    window.open(
-      'https://t.me/mo_om_oi'
-      encodeURIComponent(msg),
-      '_blank'
-    );
-  }
-}
-</script>
-  <div class="form-section">
-    <h2>📩 إرسال الطلب النهائي</h2>
-    <p style="font-size:13px;color:#a0aec0;margin-bottom:14px;text-align:center;">اخترت باقاتك؟ اختر الطريقة للإرسال للإدارة:</p>
-    <div class="contact-btns">
-      <button type="button" class="btn whatsapp-btn" onclick="sendOrder('whatsapp')">💬 إرسال الطلب عبر الواتساب</button>
-      <button type="button" class="btn telegram-btn" onclick="sendOrder('telegram')">✈️ إرسال الطلب عبر التليجرام</button>
-    </div>
-  </div>
-</div>
-</body>
-</html>
+    document.ge
